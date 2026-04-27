@@ -346,11 +346,29 @@
     padding: 30px; text-align: center;
     transition: transform 0.5s;
     background: linear-gradient(135deg, #e8c5b0 0%, #d4a090 100%);
+    position: relative; overflow: hidden;
   }
   .gallery-item.tall .gallery-item-inner { aspect-ratio: unset; height: 100%; }
   .gallery-item.wide .gallery-item-inner { aspect-ratio: 2/1; }
 
   .gallery-item:hover .gallery-item-inner { transform: scale(1.04); }
+
+  /* Real image inside card */
+  .gallery-item-inner img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s;
+  }
+  .gallery-item:hover .gallery-item-inner img { transform: scale(1.06); }
+
+  /* Fallback content shown when no image */
+  .gallery-item-fallback {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
 
   .gallery-item-emoji { font-size: 3rem; margin-bottom: 14px; }
   .gallery-item-cat {
@@ -757,11 +775,17 @@
 
   <div class="gallery-grid" id="galleryGrid">
 
+    <!-- CARD 1 — Crochet (tall) -->
     <div class="gallery-item tall" data-cat="crochet">
-      <div class="gallery-item-inner">
-        <div class="gallery-item-emoji">🧶</div>
-        <div class="gallery-item-cat">Crochet</div>
-        <div class="gallery-item-title">Handwoven Tote Bag</div>
+      <div class="gallery-item-inner" style="background: linear-gradient(135deg, #e8c5b0 0%, #d4a090 100%);">
+        <!-- Replace the src below with your image URL or file path -->
+        <!-- Example: src="images/crochet-tote.jpg" or src="https://..." -->
+        <img src="crochet1.png" alt="Handwoven Tote Bag" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">🧶</div>
+          <div class="gallery-item-cat">Crochet</div>
+          <div class="gallery-item-title">Handwoven Tote Bag</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Handwoven Tote</h3>
@@ -769,11 +793,15 @@
       </div>
     </div>
 
+    <!-- CARD 2 — Mehndi -->
     <div class="gallery-item" data-cat="mehndi">
       <div class="gallery-item-inner" style="background: linear-gradient(135deg, #d4c5a9 0%, #b8a480 100%);">
-        <div class="gallery-item-emoji">🌿</div>
-        <div class="gallery-item-cat">Mehndi</div>
-        <div class="gallery-item-title">Bridal Arabic Design</div>
+        <img src="YOUR_IMAGE_URL_HERE" alt="Bridal Mehndi Design" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">🌿</div>
+          <div class="gallery-item-cat">Mehndi</div>
+          <div class="gallery-item-title">Bridal Mehndi Design</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Bridal Arabic</h3>
@@ -781,11 +809,15 @@
       </div>
     </div>
 
+    <!-- CARD 3 — Painting -->
     <div class="gallery-item" data-cat="painting">
       <div class="gallery-item-inner" style="background: linear-gradient(135deg, #c4b5d4 0%, #9a8ab0 100%);">
-        <div class="gallery-item-emoji">🎨</div>
-        <div class="gallery-item-cat">Painting</div>
-        <div class="gallery-item-title">Watercolor Florals</div>
+        <img src="YOUR_IMAGE_URL_HERE" alt="Watercolor Florals" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">🎨</div>
+          <div class="gallery-item-cat">Painting</div>
+          <div class="gallery-item-title">Watercolor Florals</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Watercolor Florals</h3>
@@ -793,11 +825,15 @@
       </div>
     </div>
 
+    <!-- CARD 4 — Mehndi (wide) -->
     <div class="gallery-item wide" data-cat="mehndi">
       <div class="gallery-item-inner" style="background: linear-gradient(135deg, #c9b99a 0%, #a89070 100%); aspect-ratio: 2/1;">
-        <div class="gallery-item-emoji">✋</div>
-        <div class="gallery-item-cat">Mehndi</div>
-        <div class="gallery-item-title">Traditional Pakistani Design</div>
+        <img src="YOUR_IMAGE_URL_HERE" alt="Traditional Pakistani Design" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">✋</div>
+          <div class="gallery-item-cat">Mehndi</div>
+          <div class="gallery-item-title">Traditional Pakistani Design</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Traditional Pakistani</h3>
@@ -805,11 +841,15 @@
       </div>
     </div>
 
+    <!-- CARD 5 — Crafts -->
     <div class="gallery-item" data-cat="craft">
       <div class="gallery-item-inner" style="background: linear-gradient(135deg, #b5d4c4 0%, #8ab0a0 100%);">
-        <div class="gallery-item-emoji">🎀</div>
-        <div class="gallery-item-cat">Crafts</div>
-        <div class="gallery-item-title">Gift Hamper</div>
+        <img src="YOUR_IMAGE_URL_HERE" alt="Gift Hamper" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">🎀</div>
+          <div class="gallery-item-cat">Crafts</div>
+          <div class="gallery-item-title">Gift Hamper</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Custom Gift Hamper</h3>
@@ -817,11 +857,15 @@
       </div>
     </div>
 
+    <!-- CARD 6 — Crochet -->
     <div class="gallery-item" data-cat="crochet">
       <div class="gallery-item-inner" style="background: linear-gradient(135deg, #e8c5b0 0%, #c49880 100%);">
-        <div class="gallery-item-emoji">🐻</div>
-        <div class="gallery-item-cat">Crochet</div>
-        <div class="gallery-item-title">Amigurumi Plushies</div>
+        <img src="YOUR_IMAGE_URL_HERE" alt="Amigurumi Plushies" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">🐻</div>
+          <div class="gallery-item-cat">Crochet</div>
+          <div class="gallery-item-title">Amigurumi Plushies</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Amigurumi Plushies</h3>
@@ -829,11 +873,15 @@
       </div>
     </div>
 
+    <!-- CARD 7 — Painting -->
     <div class="gallery-item" data-cat="painting">
       <div class="gallery-item-inner" style="background: linear-gradient(135deg, #d4c4b5 0%, #b0a090 100%);">
-        <div class="gallery-item-emoji">🖼️</div>
-        <div class="gallery-item-cat">Painting</div>
-        <div class="gallery-item-title">Portrait Commission</div>
+        <img src="YOUR_IMAGE_URL_HERE" alt="Portrait Commission" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">🖼️</div>
+          <div class="gallery-item-cat">Painting</div>
+          <div class="gallery-item-title">Portrait Commission</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Portrait Commission</h3>
@@ -841,11 +889,15 @@
       </div>
     </div>
 
+    <!-- CARD 8 — Crafts -->
     <div class="gallery-item" data-cat="craft">
       <div class="gallery-item-inner" style="background: linear-gradient(135deg, #d4b5c4 0%, #b090a8 100%);">
-        <div class="gallery-item-emoji">💎</div>
-        <div class="gallery-item-cat">Crafts</div>
-        <div class="gallery-item-title">Resin Art Pieces</div>
+        <img src="YOUR_IMAGE_URL_HERE" alt="Resin Art Pieces" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">💎</div>
+          <div class="gallery-item-cat">Crafts</div>
+          <div class="gallery-item-title">Resin Art Pieces</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Resin Art</h3>
@@ -853,17 +905,35 @@
       </div>
     </div>
 
+    <!-- CARD 9 — Mehndi -->
     <div class="gallery-item" data-cat="mehndi">
       <div class="gallery-item-inner" style="background: linear-gradient(135deg, #c4d4a9 0%, #a0b080 100%);">
-        <div class="gallery-item-emoji">🌸</div>
-        <div class="gallery-item-cat">Mehndi</div>
-        <div class="gallery-item-title">Floral Fusion Style</div>
+        <img src="YOUR_IMAGE_URL_HERE" alt="Floral Fusion Style" onerror="this.style.display='none'">
+        <div class="gallery-item-fallback">
+          <div class="gallery-item-emoji">🌸</div>
+          <div class="gallery-item-cat">Mehndi</div>
+          <div class="gallery-item-title">Floral Fusion Style</div>
+        </div>
       </div>
       <div class="gallery-item-overlay">
         <h3>Floral Fusion</h3>
         <p>A blend of Arabic and Indian styles with large statement florals, shaded leaves and delicate filling.</p>
       </div>
     </div>
+    <div class="gallery-item" data-cat="mehndi">
+  <div class="gallery-item-inner" style="background: linear-gradient(135deg, #c4d4a9 0%, #a0b080 100%);">
+    <img src="YOUR_IMAGE_URL_HERE" alt="Aesthetic Mehndi Design" onerror="this.style.display='none'">
+    <div class="gallery-item-fallback">
+      <div class="gallery-item-emoji">✨</div>
+      <div class="gallery-item-cat">Mehndi</div>
+      <div class="gallery-item-title">Aesthetic Mehndi Design</div>
+    </div>
+  </div>
+  <div class="gallery-item-overlay">
+    <h3>Aesthetic Mehndi</h3>
+    <p>Elegant, minimal mehndi with a modern aesthetic — perfect for those who love clean and delicate designs.</p>
+  </div>
+</div>
 
   </div>
 
@@ -1002,12 +1072,12 @@
         <div class="featured-tag">Popular</div>
         <div class="pc-icon">✨</div>
         <h3>Bridal</h3>
-        <div class="pc-price"><span>PKR </span>3000<span>+</span></div>
+        <div class="pc-price"><span>PKR </span>8000</span></div>
         <ul>
           <li>Both hands & feet</li>
           <li>Traditional / Fusion / Arabic</li>
           <li>Custom bridal design</li>
-          <li>2–4 hours</li>
+          <li>4–5 hours</li>
         </ul>
         <button class="btn-book" onclick="document.querySelector('.booking-form-section').scrollIntoView({behavior:'smooth'})">Book Now</button>
       </div>
