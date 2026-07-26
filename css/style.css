@@ -787,16 +787,19 @@ footer {
   .dash-form { grid-template-columns: 1fr; }
 }
 /* ─── DESIGNER WATERMARK ─── */
-.designer-watermark {
+.designer-watermark,
+.dash-watermark {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--rose);
   opacity: 0.9;
   letter-spacing: 0.05em;
+  margin-top: 20px;
 }
 
-.designer-watermark em {
+.designer-watermark em,
+.dash-watermark em {
   font-style: italic;
   font-weight: 600;
 }
