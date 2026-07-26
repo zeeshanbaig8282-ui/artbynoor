@@ -3,6 +3,8 @@ const CATEGORIES = [
   { id: 'painting', label: 'Painting' },
   { id: 'crafts', label: 'Crafts' },
   { id: 'mehndi', label: 'Mehndi' },
+  { id: 'jewelry', label: 'Handmade Jewelery' },
+  { id: 'charms', label: 'Charms' },
 ];
 
 function getPasscode() {

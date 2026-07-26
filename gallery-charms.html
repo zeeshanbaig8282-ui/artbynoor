@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charms Gallery — Artt by Noor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">artt <span>by noor</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gallery.html" class="active">Art Gallery</a></li>
+    <li><a href="booking.html">Book Mehndi</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+  <section class="gallery-hero">
+    <div class="section-label"><a href="gallery.html" style="color:inherit;text-decoration:none;">Portfolio /</a> Charms</div>
+    <h1>🔮 <em>Charms</em> & Trinkets</h1>
+    <p>Playful little charms for bags, keys and phones — handmade in small batches.</p>
+  </section>
+
+  <div class="gallery-grid" id="galleryGrid"></div>
+
+  <footer>
+    <div class="footer-brand">artt <em>by noor</em></div>
+    <div class="footer-copy">© 2025 Artt by Noor · Faisalabad · All rights reserved</div>
+  </footer>
+</div>
+
+<div class="notify" id="notify"></div>
+<script src="js/site.js"></script>
+<script src="js/gallery.js"></script>
+<script>
+  initGallery({
+    category: 'charms',
+    categoryLabel: 'Charms',
+    gridId: 'galleryGrid',
+    fallback: [
+      { emoji: '🔑', title: 'Bag Charm', desc: 'Crocheted mini bag charm with beaded accents — a fun finishing touch for any bag.', bg: 'linear-gradient(135deg, #b8c9d4 0%, #88a0b0 100%)', size: 'tall' },
+      { emoji: '📱', title: 'Phone Charm Set', desc: 'Handmade phone charms in mix-and-match colors, sold individually or as a set.', bg: 'linear-gradient(135deg, #c9d4b8 0%, #a0b088 100%)' }
+    ]
+  });
+</script>
+</body>
+</html>

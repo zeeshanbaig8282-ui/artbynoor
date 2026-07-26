@@ -1,6 +1,6 @@
 import { put } from '@vercel/blob';
 
-const ALLOWED_CATEGORIES = ['crochet', 'painting', 'crafts', 'mehndi'];
+const ALLOWED_CATEGORIES = ['crochet', 'painting', 'crafts', 'mehndi', 'jewelry', 'charms'];
 const MAX_BYTES = 4.2 * 1024 * 1024; // stay under Vercel's request body limit
 
 export default async function handler(req, res) {

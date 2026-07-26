@@ -1,6 +1,6 @@
 import { list } from '@vercel/blob';
 
-const ALLOWED_CATEGORIES = ['crochet', 'painting', 'crafts', 'mehndi'];
+const ALLOWED_CATEGORIES = ['crochet', 'painting', 'crafts', 'mehndi', 'jewelry', 'charms'];
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

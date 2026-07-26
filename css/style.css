@@ -273,7 +273,7 @@ nav {
 /* Category hub cards */
 .category-grid {
   padding: 20px 80px 100px;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
 }
 .category-card {
   position: relative; overflow: hidden;
