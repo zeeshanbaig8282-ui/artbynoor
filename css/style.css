@@ -204,16 +204,38 @@ nav {
 }
 .about-art { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .about-tile {
-  aspect-ratio: 1; background: var(--blush);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  aspect-ratio: 1; 
+  background: var(--blush);
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
   font-size: 2rem;
-  border: 1px solid rgba(201,169,110,0.2);
-  transition: background 0.3s;
+  
+  /* Corner Rounding & Premium Gold Border */
+  border-radius: 18px !important;
+  border: 1.5px solid var(--gold) !important;
+  box-shadow: 0 8px 20px rgba(61, 31, 26, 0.12) !important;
+  
+  transition: all 0.3s ease;
   text-decoration: none;
+  overflow: hidden;
 }
-.about-tile:hover { background: var(--rose); }
-.about-tile span { font-size: 0.65rem; letter-spacing: 0.15em; margin-top: 8px; color: var(--deep); text-transform: uppercase; }
+
+.about-tile:hover { 
+  background: var(--rose); 
+  border-color: var(--deep) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(61, 31, 26, 0.2) !important;
+}
+
+.about-tile span { 
+  font-size: 0.65rem; 
+  letter-spacing: 0.15em; 
+  margin-top: 8px; 
+  color: var(--deep); 
+  text-transform: uppercase; 
+}
 
 .contact-section {
   padding: 90px 80px;
