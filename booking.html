@@ -69,19 +69,19 @@
     <form class="booking-form" onsubmit="return submitBooking(event)">
       <div class="form-group">
         <label>Full Name</label>
-        <input type="text" placeholder="Your name" required>
+        <input type="text" id="bk-name" placeholder="Your name" required>
       </div>
       <div class="form-group">
         <label>Phone Number</label>
-        <input type="tel" placeholder="+92 XXX XXXXXXX" required>
+        <input type="tel" id="bk-phone" placeholder="+92 XXX XXXXXXX" required>
       </div>
       <div class="form-group">
         <label>Event Date</label>
-        <input type="date">
+        <input type="date" id="bk-date">
       </div>
       <div class="form-group">
         <label>Event Type</label>
-        <select>
+        <select id="bk-event">
           <option value="" disabled selected>Select event type</option>
           <option>Bridal / Shaadi</option>
           <option>Mehndi Ceremony</option>
@@ -92,7 +92,7 @@
       </div>
       <div class="form-group">
         <label>Mehndi Style</label>
-        <select>
+        <select id="bk-style">
           <option value="" disabled selected>Choose a style</option>
           <option>Arabic</option>
           <option>Traditional Pakistani</option>
@@ -104,7 +104,7 @@
       </div>
       <div class="form-group">
         <label>Number of People</label>
-        <select>
+        <select id="bk-people">
           <option value="" disabled selected>How many people?</option>
           <option>Just Me (1)</option>
           <option>2–5 People</option>
@@ -114,17 +114,17 @@
       </div>
       <div class="form-group full">
         <label>Location / Address</label>
-        <input type="text" placeholder="Where should Noor come?">
+        <input type="text" id="bk-location" placeholder="Where should Noor come?">
       </div>
       <div class="form-group full">
         <label>Additional Notes</label>
-        <textarea placeholder="Any specific design requests, references, or questions..."></textarea>
+        <textarea id="bk-notes" placeholder="Any specific design requests, references, or questions..."></textarea>
       </div>
       <div class="form-submit">
-        <button type="submit">Send Booking Request</button>
+        <button type="submit">Send Booking via WhatsApp</button>
       </div>
       <p class="form-note">
-        Submitting this form sends your request details. Noor will confirm availability and pricing via Instagram DM or phone. Booking is confirmed upon advance payment agreement.
+        Submitting this form opens WhatsApp with your pre-filled booking details to send directly to Noor.
       </p>
     </form>
   </section>
