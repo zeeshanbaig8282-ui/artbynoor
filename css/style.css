@@ -375,13 +375,7 @@ nav {
   color: rgba(253, 246, 238, 0.85); 
   line-height: 1.5; 
 }
-  padding: 8px 22px;
-  background: transparent; border: 1px solid rgba(201,161,110,0.35);
-  color: var(--light-text); cursor: pointer;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase;
-  transition: all 0.3s; text-decoration: none; display: inline-block;
-}
+
 .filter-btn:hover, .filter-btn.active { background: var(--rose); color: white; border-color: var(--rose); }
 
 .gallery-grid { padding: 20px 60px 80px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
@@ -709,7 +703,30 @@ footer {
 }
   .services { padding: 50px 24px; }
   .services-grid { grid-template-columns: 1fr 1fr; }
-  .category-grid { grid-template-columns: 1fr 1fr; padding: 20px 24px 60px; }
+  .category-grid { 
+    grid-template-columns: 1fr 1fr; 
+    padding: 20px 16px 60px; 
+    gap: 12px; 
+  }
+
+  .category-card-body { 
+    padding: 16px 12px; 
+  }
+
+  .category-card-icon { 
+    font-size: 1.5rem !important; 
+    margin-bottom: 6px; 
+  }
+
+  .category-card h3 { 
+    font-size: 1.2rem !important; 
+    margin-bottom: 2px; 
+  }
+
+  .category-card p { 
+    font-size: 0.62rem !important; 
+    line-height: 1.35; 
+  }
   .gallery-grid { 
     grid-template-columns: 1fr 1fr; 
     gap: 12px;
