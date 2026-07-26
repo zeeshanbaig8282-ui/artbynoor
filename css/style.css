@@ -665,15 +665,15 @@ footer {
 }
 /* ─── DESIGNER WATERMARK ─── */
 .designer-watermark {
-  font-size: 0.8rem;
-  opacity: 0.75;
-  color: var(--deep);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--rose);
+  opacity: 0.9;
   letter-spacing: 0.05em;
 }
 
 .designer-watermark em {
   font-style: italic;
-  font-family: 'Cormorant Garamond', serif;
   font-weight: 600;
-  color: var(--rose);
 }
