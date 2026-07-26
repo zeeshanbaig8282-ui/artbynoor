@@ -56,6 +56,10 @@ nav {
   transition: all 0.3s ease;
   display: block;
 }
+
+.nav-links { display: flex; gap: 36px; list-style: none; }
+
+.nav-links a {
   font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--light-text); text-decoration: none;
   transition: color 0.3s;
@@ -577,25 +581,35 @@ footer {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 220px;
+    width: 250px;
     height: 100vh;
     background: var(--cream);
     flex-direction: column;
-    padding: 90px 30px 30px;
-    gap: 28px;
+    padding: 100px 30px 30px;
+    gap: 24px;
     box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
     transition: right 0.35s ease;
     z-index: 99;
+    list-style: none;
+    align-items: flex-start;
   }
 
   .nav-links.open {
     right: 0;
   }
 
+  .nav-links li {
+    list-style: none;
+    width: 100%;
+  }
+
   .nav-links a {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     letter-spacing: 0.15em;
     color: var(--deep);
+    text-decoration: none;
+    display: block;
+    padding: 6px 0;
   }
 
   .nav-toggle.active span:nth-child(1) {
