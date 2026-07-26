@@ -677,3 +677,24 @@ footer {
   font-style: italic;
   font-weight: 600;
 }
+/* ─── GALLERY ORDER BUTTON ─── */
+.gallery-item-overlay .btn-order-wa {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 18px;
+  background-color: var(--rose);
+  color: #ffffff;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.gallery-item-overlay .btn-order-wa:hover {
+  background-color: var(--gold);
+  color: var(--deep);
+  transform: translateY(-2px);
+}
