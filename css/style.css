@@ -346,7 +346,7 @@ nav {
   content: ''; 
   position: absolute; 
   inset: 0;
-  background: linear-gradient(180deg, rgba(61, 31, 26, 0.05) 30%, rgba(61, 31, 26, 0.85) 100%);
+  background: linear-gradient(180deg, rgba(232, 180, 160, 0.25) 0%, rgba(61, 31, 26, 0.65) 100%);
   transition: opacity 0.4s ease;
 }
 .category-card:hover::after {
