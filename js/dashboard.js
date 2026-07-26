@@ -1,4 +1,4 @@
-let savedPasscode = 'Am@ma143';
+let savedPasscode = '';
 
 function tryUnlock() {
   const passcode = document.getElementById('passcodeInput').value.trim();
@@ -9,19 +9,26 @@ function tryUnlock() {
     return;
   }
 
-  // Store the passcode to send with requests
+  // Check against the passcode
+  if (passcode !== 'Am@ma143') {
+    lockErr.textContent = 'Please enter the correct passcode';
+    return;
+  }
+
+  // Clear any previous error message
+  lockErr.textContent = '';
+
+  // Store the passcode to send with API requests
   savedPasscode = passcode;
 
-  // Attempt to load gallery manager to verify passcode with API
-  fetch('/api/images')
-    .then(() => {
-      document.getElementById('lockScreen').style.display = 'none';
-      document.getElementById('dashContent').style.display = 'block';
-      loadExistingImages();
-    })
-    .catch((err) => {
-      lockErr.textContent = 'Error connecting to server.';
-    });
+  // Reveal the dashboard UI and hide the lock screen
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('dashContent').style.display = 'block';
+
+  // Load existing gallery images if function exists
+  if (typeof loadExistingImages === 'function') {
+    loadExistingImages();
+  }
 }
 
 // Preview image when selected
@@ -84,7 +91,9 @@ async function uploadImage() {
     document.getElementById('uploadPreview').style.display = 'none';
     
     // Refresh gallery manager grid
-    loadExistingImages();
+    if (typeof loadExistingImages === 'function') {
+      loadExistingImages();
+    }
   } catch (err) {
     alert('Upload error: ' + err.message);
   } finally {
