@@ -27,7 +27,13 @@ function initGallery(opts) {
 
 function renderUploaded(grid, items, opts) {
   grid.innerHTML = '';
+  const whatsappNumber = "923087092039";
+
   items.forEach((item, i) => {
+    const title = item.title || 'this item';
+    const encodedMsg = encodeURIComponent(`Hi! I am interested in ordering: ${title}`);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+
     const el = document.createElement('div');
     el.className = 'gallery-item';
     el.innerHTML = `
@@ -37,6 +43,9 @@ function renderUploaded(grid, items, opts) {
       <div class="gallery-item-overlay">
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(opts.categoryLabel)}</p>
+        <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
+          Order Now
+        </a>
       </div>`;
     grid.appendChild(el);
   });
@@ -44,7 +53,13 @@ function renderUploaded(grid, items, opts) {
 
 function renderFallback(grid, opts) {
   grid.innerHTML = '';
+  const whatsappNumber = "923087092039";
+
   (opts.fallback || []).forEach(item => {
+    const title = item.title || 'this item';
+    const encodedMsg = encodeURIComponent(`Hi! I am interested in ordering: ${title}`);
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+
     const el = document.createElement('div');
     el.className = 'gallery-item' + (item.size ? ' ' + item.size : '');
     el.innerHTML = `
@@ -58,6 +73,9 @@ function renderFallback(grid, opts) {
       <div class="gallery-item-overlay">
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.desc)}</p>
+        <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
+          Order Now
+        </a>
       </div>`;
     grid.appendChild(el);
   });
