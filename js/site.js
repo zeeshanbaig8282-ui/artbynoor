@@ -19,7 +19,7 @@ function submitBooking(e) {
   if (e) e.preventDefault();
 
   // 1. Enter your WhatsApp phone number with country code (no + or spaces)
-  const whatsappNumber = "923087092039"; // <-- REPLACE WITH YOUR REAL PHONE NUMBER
+  const whatsappNumber = "923087092039";
 
   // 2. Get values from form inputs
   const name = document.getElementById('bk-name')?.value || 'Not specified';
@@ -51,6 +51,14 @@ function submitBooking(e) {
   return false;
 }
 
+// ─── ADDED: Helper function to build WhatsApp Order URL for uploaded items ───
+function getWhatsAppOrderUrl(itemTitle) {
+  const whatsappNumber = "923087092039";
+  const title = itemTitle || "this item";
+  const message = `Hi! I would like to order: ${title}`;
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // Existing animation logic
   document.querySelectorAll('.hero-text > *, .booking-hero-text > *').forEach((el, i) => {
@@ -60,18 +68,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 100);
   });
 
-  // NEW: Mobile Hamburger Menu Toggle Logic
+  // Mobile Hamburger Menu Toggle Logic
   const toggleBtn = document.getElementById('navToggle');
   const navMenu = document.getElementById('navMenu');
 
   if (toggleBtn && navMenu) {
-    // Opens and closes menu when clicking the hamburger icon
     toggleBtn.addEventListener('click', () => {
       toggleBtn.classList.toggle('active');
       navMenu.classList.toggle('open');
     });
 
-    // Automatically closes menu when tapping outside of it
     document.addEventListener('click', (e) => {
       if (!toggleBtn.contains(e.target) && !navMenu.contains(e.target)) {
         toggleBtn.classList.remove('active');
