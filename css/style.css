@@ -290,34 +290,66 @@ nav {
   max-width: 500px; margin: 0 auto; line-height: 1.9;
 }
 
-/* Category hub cards */
+
+
+.gallery-filters { display: flex; justify-content: center; gap: 8px; padding: 30px 80px; flex-wrap: wrap; }
+.filter-btn {//* Category hub cards - Premium Upgrade */
 .category-grid {
   padding: 20px 80px 100px;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
 }
 .category-card {
-  position: relative; overflow: hidden;
+  position: relative; 
+  overflow: hidden;
   aspect-ratio: 3/4;
-  display: flex; align-items: flex-end;
+  display: flex; 
+  align-items: flex-end;
   text-decoration: none;
-  background: linear-gradient(135deg, #e8c5b0 0%, #d4a090 100%);
-  transition: transform 0.4s;
+  border-radius: 16px; /* Elegant rounded corners */
+  border: 1px solid rgba(201, 169, 110, 0.4); /* Gold accent border */
+  box-shadow: 0 12px 30px rgba(61, 31, 26, 0.08); /* Soft floating shadow */
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
-.category-card:hover { transform: translateY(-6px); }
+.category-card:hover { 
+  transform: translateY(-8px); 
+  border-color: var(--gold);
+  box-shadow: 0 20px 40px rgba(61, 31, 26, 0.18);
+}
 .category-card::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(61,31,26,0) 40%, rgba(61,31,26,0.75) 100%);
+  content: ''; 
+  position: absolute; 
+  inset: 0;
+  background: linear-gradient(180deg, rgba(61, 31, 26, 0.05) 30%, rgba(61, 31, 26, 0.85) 100%);
+  transition: opacity 0.4s ease;
 }
-.category-card-body { position: relative; z-index: 2; padding: 28px 22px; color: var(--cream); }
-.category-card-icon { font-size: 2.2rem; margin-bottom: 8px; }
+.category-card:hover::after {
+  background: linear-gradient(180deg, rgba(61, 31, 26, 0) 20%, rgba(61, 31, 26, 0.9) 100%);
+}
+.category-card-body { 
+  position: relative; 
+  z-index: 2; 
+  padding: 32px 24px; 
+  color: var(--cream); 
+  width: 100%;
+}
+.category-card-icon { 
+  font-size: 2.2rem; 
+  margin-bottom: 10px; 
+}
 .category-card h3 {
   font-family: 'Cormorant Garamond', serif;
-  font-size: 1.6rem; font-weight: 400; margin-bottom: 6px;
+  font-size: 1.8rem; 
+  font-weight: 400; 
+  margin-bottom: 4px;
+  color: #ffffff;
+  letter-spacing: 0.04em;
 }
-.category-card p { font-size: 0.68rem; letter-spacing: 0.06em; opacity: 0.85; line-height: 1.6; }
-
-.gallery-filters { display: flex; justify-content: center; gap: 8px; padding: 30px 80px; flex-wrap: wrap; }
-.filter-btn {
+.category-card p { 
+  font-size: 0.72rem; 
+  letter-spacing: 0.08em; 
+  color: rgba(253, 246, 238, 0.85); 
+  line-height: 1.5; 
+}
   padding: 8px 22px;
   background: transparent; border: 1px solid rgba(201,161,110,0.35);
   color: var(--light-text); cursor: pointer;
