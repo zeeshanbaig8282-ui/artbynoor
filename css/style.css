@@ -202,7 +202,19 @@ nav {
   font-size: 0.8rem; line-height: 2; letter-spacing: 0.05em;
   color: var(--light-text); margin-bottom: 16px;
 }
-.about-art { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.about-art { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 16px; 
+  padding: 24px;
+  background: rgba(253, 246, 238, 0.25) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 12px 40px 0 rgba(61, 31, 26, 0.08), 
+              inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+}
 .about-tile {
   aspect-ratio: 1; 
   
