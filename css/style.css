@@ -292,11 +292,36 @@ nav {
 
 
 
-.gallery-filters { display: flex; justify-content: center; gap: 8px; padding: 30px 80px; flex-wrap: wrap; }
-.filter-btn {//* Category hub cards - Premium Upgrade */
+./* FIXED CODE */
+.gallery-filters { 
+  display: flex; 
+  justify-content: center; 
+  gap: 8px; 
+  padding: 30px 80px; 
+  flex-wrap: wrap; 
+}
+
+.filter-btn {
+  padding: 8px 22px;
+  background: transparent; 
+  border: 1px solid rgba(201,161,110,0.35);
+  color: var(--light-text); 
+  cursor: pointer;
+  font-family: 'Josefin Sans', sans-serif;
+  font-size: 0.66rem; 
+  letter-spacing: 0.18em; 
+  text-transform: uppercase;
+  transition: all 0.3s; 
+  text-decoration: none; 
+  display: inline-block;
+}
+
+/* Category hub cards - Premium Upgrade */
 .category-grid {
   padding: 20px 80px 100px;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 24px;
 }
 .category-card {
   position: relative; 
