@@ -205,28 +205,35 @@ nav {
 .about-art { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .about-tile {
   aspect-ratio: 1; 
-  background: transparent !important;       /* Made transparent */
+  
+  /* Glassmorphism Styling */
+  background: rgba(253, 246, 238, 0.35) !important;              /* Semi-transparent cream tint */
+  backdrop-filter: blur(12px) saturate(160%) !important;        /* Frosted glass blur */
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;/* Safari support */
+  
   display: flex; 
   flex-direction: column;
   align-items: center; 
   justify-content: center;
   font-size: 2rem;
   
-  /* Corner Rounding & Premium Gold Border */
+  /* Corner Rounding & Glass Borders */
   border-radius: 18px !important;
-  border: 1.5px solid var(--gold) !important;
-  box-shadow: 0 4px 15px rgba(61, 31, 26, 0.05) !important;
+  border: 1.5px solid rgba(201, 169, 110, 0.6) !important;        /* Semi-transparent gold edge */
+  box-shadow: 0 8px 32px 0 rgba(61, 31, 26, 0.1), 
+              inset 0 0 0 1px rgba(255, 255, 255, 0.4) !important;/* Inner white edge reflection */
   
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   text-decoration: none;
   overflow: hidden;
 }
 
 .about-tile:hover { 
-  background: rgba(201, 169, 110, 0.12) !important; /* Soft translucent gold tint */
+  background: rgba(232, 180, 160, 0.45) !important;             /* Rose glass tint on hover */
   border-color: var(--rose) !important;
-  transform: translateY(-4px);
-  box-shadow: 0 10px 22px rgba(61, 31, 26, 0.15) !important;
+  transform: translateY(-5px);
+  box-shadow: 0 12px 36px 0 rgba(61, 31, 26, 0.18), 
+              inset 0 0 0 1px rgba(255, 255, 255, 0.6) !important;
 }
 
 .about-tile span { 
