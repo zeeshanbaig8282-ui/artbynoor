@@ -29,7 +29,7 @@ function renderUploaded(grid, items, opts) {
   grid.innerHTML = '';
   items.forEach((item, i) => {
     const el = document.createElement('div');
-    el.className = 'gallery-item' + (i === 0 ? ' tall' : '');
+    el.className = 'gallery-item';
     el.innerHTML = `
       <div class="gallery-item-inner">
         <img src="${item.url}" alt="${escapeHtml(item.title)}" loading="lazy">
