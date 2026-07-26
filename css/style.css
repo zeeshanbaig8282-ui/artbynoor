@@ -553,12 +553,29 @@ footer {
   .hero, .about-section, .booking-hero { grid-template-columns: 1fr; padding: 50px 30px; }
   .hero-visual {
   display: flex;
-  margin-top: 30px;
+  margin-top: 20px;
+  justify-content: center;
 }
 
+/* Reduces the spinning circle container */
 .hero-mandala {
-  width: 260px;
-  height: 260px;
+  width: 220px;
+  height: 220px;
+}
+
+/* Scales down the flower emoji & text inside the circle */
+.hero-badge-icon {
+  font-size: 2rem;
+  margin-bottom: 4px;
+}
+
+.hero-badge-name {
+  font-size: 1.2rem;
+}
+
+.hero-badge-sub {
+  font-size: 0.5rem;
+  letter-spacing: 0.2em;
 }
   .services { padding: 50px 24px; }
   .services-grid { grid-template-columns: 1fr 1fr; }
