@@ -205,7 +205,7 @@ nav {
 .about-art { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .about-tile {
   aspect-ratio: 1; 
-  background: var(--blush);
+  background: transparent !important;       /* Made transparent */
   display: flex; 
   flex-direction: column;
   align-items: center; 
@@ -215,7 +215,7 @@ nav {
   /* Corner Rounding & Premium Gold Border */
   border-radius: 18px !important;
   border: 1.5px solid var(--gold) !important;
-  box-shadow: 0 8px 20px rgba(61, 31, 26, 0.12) !important;
+  box-shadow: 0 4px 15px rgba(61, 31, 26, 0.05) !important;
   
   transition: all 0.3s ease;
   text-decoration: none;
@@ -223,10 +223,10 @@ nav {
 }
 
 .about-tile:hover { 
-  background: var(--rose); 
-  border-color: var(--deep) !important;
+  background: rgba(201, 169, 110, 0.12) !important; /* Soft translucent gold tint */
+  border-color: var(--rose) !important;
   transform: translateY(-4px);
-  box-shadow: 0 12px 25px rgba(61, 31, 26, 0.2) !important;
+  box-shadow: 0 10px 22px rgba(61, 31, 26, 0.15) !important;
 }
 
 .about-tile span { 
