@@ -202,26 +202,20 @@ nav {
   font-size: 0.8rem; line-height: 2; letter-spacing: 0.05em;
   color: var(--light-text); margin-bottom: 16px;
 }
+/* ✅ REPLACE WITH THIS */
 .about-art { 
   display: grid; 
   grid-template-columns: 1fr 1fr; 
   gap: 16px; 
-  padding: 24px;
-  background: rgba(253, 246, 238, 0.25) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  border-radius: 24px !important;
-  border: 1px solid rgba(255, 255, 255, 0.5) !important;
-  box-shadow: 0 12px 40px 0 rgba(61, 31, 26, 0.08), 
-              inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
 }
+/* ✅ REPLACE WITH THIS */
 .about-tile {
   aspect-ratio: 1; 
   
-  /* Glassmorphism Styling */
-  background: rgba(253, 246, 238, 0.35) !important;              /* Semi-transparent cream tint */
-  backdrop-filter: blur(12px) saturate(160%) !important;        /* Frosted glass blur */
-  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;/* Safari support */
+  /* Glass Background & Blur */
+  background: rgba(253, 246, 238, 0.5) !important;
+  backdrop-filter: blur(14px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
   
   display: flex; 
   flex-direction: column;
@@ -229,11 +223,11 @@ nav {
   justify-content: center;
   font-size: 2rem;
   
-  /* Corner Rounding & Glass Borders */
-  border-radius: 18px !important;
-  border: 1.5px solid rgba(201, 169, 110, 0.6) !important;        /* Semi-transparent gold edge */
-  box-shadow: 0 8px 32px 0 rgba(61, 31, 26, 0.1), 
-              inset 0 0 0 1px rgba(255, 255, 255, 0.4) !important;/* Inner white edge reflection */
+  /* Glass Border & Soft Elevation */
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 8px 32px 0 rgba(61, 31, 26, 0.08), 
+              inset 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
   
   transition: all 0.4s ease;
   text-decoration: none;
@@ -241,11 +235,11 @@ nav {
 }
 
 .about-tile:hover { 
-  background: rgba(232, 180, 160, 0.45) !important;             /* Rose glass tint on hover */
-  border-color: var(--rose) !important;
-  transform: translateY(-5px);
-  box-shadow: 0 12px 36px 0 rgba(61, 31, 26, 0.18), 
-              inset 0 0 0 1px rgba(255, 255, 255, 0.6) !important;
+  background: rgba(232, 180, 160, 0.4) !important;
+  border-color: var(--gold) !important;
+  transform: translateY(-6px);
+  box-shadow: 0 14px 36px 0 rgba(61, 31, 26, 0.15), 
+              inset 0 0 0 1px rgba(255, 255, 255, 0.8) !important;
 }
 
 .about-tile span { 
