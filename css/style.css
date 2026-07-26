@@ -328,11 +328,13 @@ nav {
   overflow: hidden;
   aspect-ratio: 3/4;
   display: flex; 
-  align-items: flex-end;
+  align-items: center;      /* Centers content vertically */
+  justify-content: center;  /* Centers content horizontally */
+  text-align: center;       /* Ensures text is centered */
   text-decoration: none;
-  border-radius: 16px; /* Elegant rounded corners */
-  border: 1px solid rgba(201, 169, 110, 0.4); /* Gold accent border */
-  box-shadow: 0 12px 30px rgba(61, 31, 26, 0.08); /* Soft floating shadow */
+  border-radius: 16px; 
+  border: 1px solid rgba(201, 169, 110, 0.4); 
+  box-shadow: 0 12px 30px rgba(61, 31, 26, 0.08); 
   transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 .category-card:hover { 
@@ -353,9 +355,14 @@ nav {
 .category-card-body { 
   position: relative; 
   z-index: 2; 
-  padding: 32px 24px; 
+  padding: 20px 16px; 
   color: var(--cream); 
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .category-card-icon { 
   font-size: 2.2rem; 
