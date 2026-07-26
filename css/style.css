@@ -551,7 +551,15 @@ footer {
   nav { padding: 16px 24px; }
   .nav-links { gap: 20px; }
   .hero, .about-section, .booking-hero { grid-template-columns: 1fr; padding: 50px 30px; }
-  .hero-visual { display: none; }
+  .hero-visual {
+  display: flex;
+  margin-top: 30px;
+}
+
+.hero-mandala {
+  width: 260px;
+  height: 260px;
+}
   .services { padding: 50px 24px; }
   .services-grid { grid-template-columns: 1fr 1fr; }
   .category-grid { grid-template-columns: 1fr 1fr; padding: 20px 24px 60px; }
