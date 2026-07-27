@@ -3,7 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build:speed-insights": "esbuild js/speed-insights-entry.js --bundle --outfile=js/speed-insights.js --format=iife --platform=browser --minify"
+  },
   "dependencies": {
-    "@vercel/blob": "^0.27.0"
+    "@vercel/blob": "^0.27.0",
+    "@vercel/speed-insights": "^2.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
   }
 }
