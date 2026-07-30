@@ -989,7 +989,51 @@ footer {
 .star-rating label:hover ~ label {
   color: var(--gold);
 }
+/* ══════════════════════════════════
+   MOBILE NAVIGATION STYLES
+══════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Ensure the navbar stays on top */
+  nav {
+    position: relative;
+    z-index: 1000;
+  }
 
+  /* Slide-down overlay menu container */
+  .nav-links {
+    position: absolute;
+    top: 100%; /* Sits directly under the navbar header */
+    left: 0;
+    width: 100%;
+    background-color: #F8B5BA; /* Matches header navbar color */
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0 32px 0;
+    gap: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+
+    /* Hide menu by default */
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Target both class options depending on your JS toggle class */
+  .nav-links.open,
+  .nav-links.active {
+    display: flex !important;
+    opacity: 1 !important;
+  }
+
+  .nav-links li {
+    margin: 0;
+  }
+
+  .nav-links a {
+    font-size: 0.95rem;
+    letter-spacing: 0.25em;
+  }
+}
 @media (max-width: 900px) {
   .reviews-hero, .reviews-grid, .review-form-section { padding: 50px 24px; }
   .reviews-grid { grid-template-columns: 1fr; }
