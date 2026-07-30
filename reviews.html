@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Reviews — Artt by Noor</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">artt <span>by noor</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="gallery.html">Art Gallery</a></li>
+    <li><a href="booking.html">Book Mehndi</a></li>
+    <li><a href="reviews.html" class="active">Reviews</a></li>
+  </ul>
+</nav>
+
+<div class="page">
+  <section class="reviews-hero">
+    <div class="section-label">Testimonials</div>
+    <h1>Client <em>Love</em> & Reviews</h1>
+    <p>Read what clients say about their custom orders, crochet pieces, paintings, and bridal mehndi experiences.</p>
+  </section>
+
+  <div class="reviews-grid" id="reviewsGrid"></div>
+
+  <section class="review-form-section">
+    <h2>Leave a <em>Review</em></h2>
+    <p class="form-sub" style="text-align: center; font-size: 0.72rem; color: rgba(253,246,238,0.5); letter-spacing: 0.1em; margin-bottom: 40px;">
+      Have you ordered art or booked mehndi with Noor? Share your feedback below!
+    </p>
+
+    <form class="booking-form" onsubmit="return submitReview(event)">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" name="name" placeholder="Your full name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Service Received</label>
+        <select name="service" required>
+          <option value="" disabled selected>Select service</option>
+          <option>Bridal / Event Mehndi</option>
+          <option>Crochet Creation</option>
+          <option>Painting / Portrait</option>
+          <option>Crafts / Gift Set</option>
+          <option>Jewelery / Charms</option>
+        </select>
+      </div>
+
+      <div class="form-group full">
+        <label>Rating</label>
+        <div class="star-rating">
+          <input type="radio" id="star5" name="rating" value="5" required><label for="star5">★</label>
+          <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+          <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+          <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+          <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>Your Review</label>
+        <textarea name="comment" placeholder="Tell us about your experience..." required></textarea>
+      </div>
+
+      <div class="form-submit">
+        <button type="submit">Submit Review</button>
+      </div>
+    </form>
+  </section>
+
+  <footer>
+    <div class="footer-brand">artt <em>by noor</em></div>
+    <div class="footer-copy">© 2025 Artt by Noor · Faisalabad · All rights reserved</div>
+    <div class="designer-watermark" style="margin-top:6px; font-size:0.8rem; opacity:0.75;">Designed by <em>Engr Zeeshan Baig</em></div>
+  </footer>
+</div>
+
+<div class="notify" id="notify"></div>
+<script src="js/site.js"></script>
+</body>
+</html>
