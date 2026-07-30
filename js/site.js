@@ -95,14 +95,33 @@ function escapeHtml(text) {
 }
 
 /* ══════════════════════════════════
-   INIT & ANIMATIONS
+   INIT, MOBILE MENU & ANIMATIONS
 ══════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Render reviews if container exists on the current page
+  // 1. Mobile Menu Toggle Listener
+  const menuToggle = document.querySelector('.menu-toggle, .hamburger, .nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
+
+  if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      menuToggle.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking a link
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        menuToggle.classList.remove('active');
+      });
+    });
+  }
+
+  // 2. Render reviews if container exists on current page
   renderReviews();
 
-  // Hero entrance animations
+  // 3. Hero entrance animations
   document.querySelectorAll('.hero-text > *, .booking-hero-text > *, .reviews-hero > *').forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
