@@ -25,20 +25,17 @@ function submitBooking(e) {
    REVIEWS SYSTEM
 ══════════════════════════════════ */
 
-// Retrieve reviews from localStorage (starts empty)
 function getStoredReviews() {
   const stored = localStorage.getItem("artt_reviews");
   return stored ? JSON.parse(stored) : [];
 }
 
-// Render review cards into the #reviewsGrid container
 function renderReviews() {
   const container = document.getElementById("reviewsGrid");
   if (!container) return;
 
   const reviews = getStoredReviews();
 
-  // Show placeholder message when no reviews are present
   if (reviews.length === 0) {
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; color: var(--light-text); font-size: 0.85rem; padding: 40px 0;">
@@ -61,7 +58,6 @@ function renderReviews() {
   `).join("");
 }
 
-// Handle review form submission
 function submitReview(event) {
   if (event) event.preventDefault();
   const form = event.target;
@@ -84,7 +80,6 @@ function submitReview(event) {
   return false;
 }
 
-// Security helper to sanitize user input before rendering
 function escapeHtml(text) {
   return String(text)
     .replace(/&/g, "&amp;")
@@ -95,33 +90,33 @@ function escapeHtml(text) {
 }
 
 /* ══════════════════════════════════
-   INIT, MOBILE MENU & ANIMATIONS
+   GLOBAL MOBILE MENU & INIT
 ══════════════════════════════════ */
 
-document.addEventListener('DOMContentLoaded', () => {
-  // 1. Mobile Menu Toggle Listener
-  const menuToggle = document.querySelector('.menu-toggle, .hamburger, .nav-toggle');
+// Global Event Listener for Mobile Toggle
+document.addEventListener('click', (e) => {
+  const toggleBtn = e.target.closest('.menu-toggle, .hamburger, .nav-toggle');
   const navLinks = document.querySelector('.nav-links');
 
-  if (menuToggle && navLinks) {
-    menuToggle.addEventListener('click', () => {
-      navLinks.classList.toggle('active');
-      menuToggle.classList.toggle('active');
-    });
-
-    // Close mobile menu when clicking a link
-    navLinks.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        menuToggle.classList.remove('active');
-      });
-    });
+  // If clicked on menu button
+  if (toggleBtn && navLinks) {
+    navLinks.classList.toggle('active');
+    navLinks.classList.toggle('open');
+    toggleBtn.classList.toggle('active');
+    return;
   }
 
-  // 2. Render reviews if container exists on current page
+  // If clicked on a menu link inside open drawer
+  if (e.target.closest('.nav-links a') && navLinks) {
+    navLinks.classList.remove('active', 'open');
+    const btn = document.querySelector('.menu-toggle, .hamburger, .nav-toggle');
+    if (btn) btn.classList.remove('active');
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
   renderReviews();
 
-  // 3. Hero entrance animations
   document.querySelectorAll('.hero-text > *, .booking-hero-text > *, .reviews-hero > *').forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
