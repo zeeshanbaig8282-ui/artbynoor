@@ -213,3 +213,70 @@ function escapeHtml(str) {
   d.textContent = str == null ? '' : str;
   return d.innerHTML;
 }
+/* ══════════════════════════════════
+   ADMIN REVIEW MANAGEMENT
+══════════════════════════════════ */
+
+function renderAdminReviews() {
+  const container = document.getElementById("adminReviewsContainer");
+  if (!container) return;
+
+  const reviews = typeof getStoredReviews === 'function' ? getStoredReviews() : [];
+
+  if (reviews.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; color: var(--light-text); font-size: 0.85rem; padding: 30px; border: 1px dashed rgba(201,169,110,0.3);">
+        No client reviews posted yet.
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="admin-reviews-list">
+      ${reviews.map((r, index) => `
+        <div class="admin-review-item">
+          <div class="admin-review-content">
+            <div class="admin-review-meta">
+              <strong class="admin-review-name">${escapeHtml(r.name)}</strong>
+              <span class="admin-review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+              <span class="admin-review-tag">${escapeHtml(r.service)}</span>
+            </div>
+            <p class="admin-review-text">"${escapeHtml(r.comment)}"</p>
+            <small class="admin-review-date">${r.date}</small>
+          </div>
+          <button type="button" class="admin-delete-btn" onclick="deleteReview(${r.id || index})">
+            Delete Review
+          </button>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function deleteReview(identifier) {
+  if (!confirm("Are you sure you want to delete this review?")) return;
+
+  let reviews = getStoredReviews();
+
+  // Filter out by unique timestamp ID or fallback index
+  reviews = reviews.filter((r, idx) => (r.id ? r.id !== identifier : idx !== identifier));
+
+  localStorage.setItem("artt_reviews", JSON.stringify(reviews));
+  
+  renderAdminReviews();
+  if (typeof renderReviews === 'function') renderReviews();
+  
+  showNotify("✓ Review deleted successfully");
+}
+
+// Hook into unlock logic to render reviews upon logging in
+const originalTryUnlock = window.tryUnlock;
+if (typeof originalTryUnlock === 'function') {
+  window.tryUnlock = function() {
+    originalTryUnlock();
+    renderAdminReviews();
+  };
+} else {
+  document.addEventListener("DOMContentLoaded", renderAdminReviews);
+}
