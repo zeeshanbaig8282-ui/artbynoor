@@ -25,34 +25,10 @@ function submitBooking(e) {
    REVIEWS SYSTEM
 ══════════════════════════════════ */
 
-// Retrieve reviews from localStorage or return default sample reviews
+// Retrieve reviews from localStorage (starts empty)
 function getStoredReviews() {
-  const defaultReviews = [
-    {
-      name: "Ayesha Khan",
-      rating: 5,
-      date: "2025-02-14",
-      service: "Bridal / Event Mehndi",
-      comment: "Noor did my bridal mehndi and it was absolutely stunning! The color came out so rich and deep, and the intricate details were perfection."
-    },
-    {
-      name: "Sana Tariq",
-      rating: 5,
-      date: "2025-01-28",
-      service: "Crochet Creation",
-      comment: "Ordered a custom crochet tote bag. The craftsmanship is amazing and the yarn quality is super soft. Will definitely order again!"
-    },
-    {
-      name: "Fatima Ali",
-      rating: 5,
-      date: "2025-01-10",
-      service: "Painting / Portrait",
-      comment: "The watercolor floral piece I received looks even prettier in person! Beautiful packaging and super quick communication."
-    }
-  ];
-
   const stored = localStorage.getItem("artt_reviews");
-  return stored ? JSON.parse(stored) : defaultReviews;
+  return stored ? JSON.parse(stored) : [];
 }
 
 // Render review cards into the #reviewsGrid container
@@ -61,6 +37,17 @@ function renderReviews() {
   if (!container) return;
 
   const reviews = getStoredReviews();
+
+  // Show placeholder message when no reviews are present
+  if (reviews.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; color: var(--light-text); font-size: 0.85rem; padding: 40px 0;">
+        No reviews yet. Be the first to leave a review below! ✨
+      </div>
+    `;
+    return;
+  }
+
   container.innerHTML = reviews.map(r => `
     <div class="review-card">
       <div class="rc-header">
@@ -112,7 +99,7 @@ function escapeHtml(text) {
 ══════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Render reviews if present on the current page
+  // Render reviews if container exists on the current page
   renderReviews();
 
   // Hero entrance animations
