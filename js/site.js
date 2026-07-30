@@ -17,72 +17,109 @@ function showNotify(message, isError) {
 
 function submitBooking(e) {
   if (e) e.preventDefault();
-
-  // 1. Enter your WhatsApp phone number with country code (no + or spaces)
-  const whatsappNumber = "923087092039";
-
-  // 2. Get values from form inputs
-  const name = document.getElementById('bk-name')?.value || 'Not specified';
-  const phone = document.getElementById('bk-phone')?.value || 'Not specified';
-  const date = document.getElementById('bk-date')?.value || 'Not specified';
-  const eventType = document.getElementById('bk-event')?.value || 'Not specified';
-  const style = document.getElementById('bk-style')?.value || 'Not specified';
-  const people = document.getElementById('bk-people')?.value || 'Not specified';
-  const location = document.getElementById('bk-location')?.value || 'Not specified';
-  const notes = document.getElementById('bk-notes')?.value || 'None';
-
-  // 3. Create the formatted WhatsApp message
-  const message = `✨ *New Mehndi Booking Request* ✨\n\n` +
-                  `👤 *Name:* ${name}\n` +
-                  `📞 *Phone:* ${phone}\n` +
-                  `📅 *Event Date:* ${date}\n` +
-                  `🎉 *Event Type:* ${eventType}\n` +
-                  `🎨 *Style:* ${style}\n` +
-                  `👥 *People:* ${people}\n` +
-                  `📍 *Location:* ${location}\n` +
-                  `📝 *Notes:* ${notes}`;
-
-  // 4. Show toast notification & open WhatsApp link
-  showNotify('✓ Redirecting to WhatsApp... 🌸');
-  
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-  window.open(whatsappUrl, '_blank');
-
+  showNotify('✓ Booking request sent! Noor will reach out soon 🌸');
   return false;
 }
 
-// ─── ADDED: Helper function to build WhatsApp Order URL for uploaded items ───
-function getWhatsAppOrderUrl(itemTitle) {
-  const whatsappNumber = "923087092039";
-  const title = itemTitle || "this item";
-  const message = `Hi! I would like to order: ${title}`;
-  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+/* ══════════════════════════════════
+   REVIEWS SYSTEM
+══════════════════════════════════ */
+
+// Retrieve reviews from localStorage or return default sample reviews
+function getStoredReviews() {
+  const defaultReviews = [
+    {
+      name: "Ayesha Khan",
+      rating: 5,
+      date: "2025-02-14",
+      service: "Bridal / Event Mehndi",
+      comment: "Noor did my bridal mehndi and it was absolutely stunning! The color came out so rich and deep, and the intricate details were perfection."
+    },
+    {
+      name: "Sana Tariq",
+      rating: 5,
+      date: "2025-01-28",
+      service: "Crochet Creation",
+      comment: "Ordered a custom crochet tote bag. The craftsmanship is amazing and the yarn quality is super soft. Will definitely order again!"
+    },
+    {
+      name: "Fatima Ali",
+      rating: 5,
+      date: "2025-01-10",
+      service: "Painting / Portrait",
+      comment: "The watercolor floral piece I received looks even prettier in person! Beautiful packaging and super quick communication."
+    }
+  ];
+
+  const stored = localStorage.getItem("artt_reviews");
+  return stored ? JSON.parse(stored) : defaultReviews;
 }
 
+// Render review cards into the #reviewsGrid container
+function renderReviews() {
+  const container = document.getElementById("reviewsGrid");
+  if (!container) return;
+
+  const reviews = getStoredReviews();
+  container.innerHTML = reviews.map(r => `
+    <div class="review-card">
+      <div class="rc-header">
+        <div class="rc-name">${escapeHtml(r.name)}</div>
+        <div class="rc-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+      </div>
+      <div class="rc-tag">${escapeHtml(r.service)}</div>
+      <p class="rc-comment">${escapeHtml(r.comment)}</p>
+      <div class="rc-date">${r.date}</div>
+    </div>
+  `).join("");
+}
+
+// Handle review form submission
+function submitReview(event) {
+  if (event) event.preventDefault();
+  const form = event.target;
+
+  const newReview = {
+    name: form.elements['name'].value.trim(),
+    service: form.elements['service'].value,
+    rating: parseInt(form.elements['rating'].value, 10),
+    comment: form.elements['comment'].value.trim(),
+    date: new Date().toISOString().split('T')[0]
+  };
+
+  const reviews = getStoredReviews();
+  reviews.unshift(newReview);
+  localStorage.setItem("artt_reviews", JSON.stringify(reviews));
+
+  form.reset();
+  renderReviews();
+  showNotify("✓ Thank you! Your review has been submitted 🌸");
+  return false;
+}
+
+// Security helper to sanitize user input before rendering
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* ══════════════════════════════════
+   INIT & ANIMATIONS
+══════════════════════════════════ */
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Existing animation logic
-  document.querySelectorAll('.hero-text > *, .booking-hero-text > *').forEach((el, i) => {
+  // Render reviews if present on the current page
+  renderReviews();
+
+  // Hero entrance animations
+  document.querySelectorAll('.hero-text > *, .booking-hero-text > *, .reviews-hero > *').forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
     el.style.transition = `opacity 0.7s ${i * 0.12}s, transform 0.7s ${i * 0.12}s`;
     setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 100);
   });
-
-  // Mobile Hamburger Menu Toggle Logic
-  const toggleBtn = document.getElementById('navToggle');
-  const navMenu = document.getElementById('navMenu');
-
-  if (toggleBtn && navMenu) {
-    toggleBtn.addEventListener('click', () => {
-      toggleBtn.classList.toggle('active');
-      navMenu.classList.toggle('open');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!toggleBtn.contains(e.target) && !navMenu.contains(e.target)) {
-        toggleBtn.classList.remove('active');
-        navMenu.classList.remove('open');
-      }
-    });
-  }
 });
