@@ -1038,3 +1038,67 @@ footer {
   .reviews-hero, .reviews-grid, .review-form-section { padding: 50px 24px; }
   .reviews-grid { grid-template-columns: 1fr; }
 }
+/* ══════════════════════════════════
+   RIGHT-TO-LEFT SLIDE DRAWER MENU
+══════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Keep navbar header above content */
+  nav {
+    position: relative;
+    z-index: 1000;
+  }
+
+  /* Side Drawer Container */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 60vw;              /* Takes up slightly over half the screen width */
+    height: 100vh;            /* Full viewport height */
+    background-color: #F8B5BA;/* Matching header background color */
+    
+    display: flex !important;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    
+    padding: 100px 32px 40px; /* Top padding clears the close button area */
+    gap: 24px;
+    box-shadow: -8px 0 25px rgba(0, 0, 0, 0.15);
+    
+    /* Off-screen initial position (hidden off the right side) */
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 999;
+  }
+
+  /* Slide in active state */
+  .nav-links.open,
+  .nav-links.active {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+  }
+
+  .nav-links li {
+    width: 100%;
+    margin: 0;
+    border-bottom: 1px solid rgba(61, 31, 26, 0.08); /* Subtle dividers */
+    padding-bottom: 12px;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    display: block;
+    width: 100%;
+  }
+
+  /* Ensure menu button (close X) stays visible on top of drawer */
+  .menu-toggle,
+  .hamburger,
+  .nav-toggle {
+    position: relative;
+    z-index: 1001;
+  }
+}
