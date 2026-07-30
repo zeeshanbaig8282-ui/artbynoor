@@ -989,118 +989,33 @@ footer {
 .star-rating label:hover ~ label {
   color: var(--gold);
 }
-/* ══════════════════════════════════
-   MOBILE NAVIGATION STYLES
-══════════════════════════════════ */
-@media (max-width: 768px) {
-  /* Ensure the navbar stays on top */
-  nav {
-    position: relative;
-    z-index: 1000;
-  }
 
-  /* Slide-down overlay menu container */
-  .nav-links {
-    position: absolute;
-    top: 100%; /* Sits directly under the navbar header */
-    left: 0;
-    width: 100%;
-    background-color: #F8B5BA; /* Matches header navbar color */
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 0 32px 0;
-    gap: 20px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-
-    /* Hide menu by default */
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  /* Target both class options depending on your JS toggle class */
-  .nav-links.open,
-  .nav-links.active {
-    display: flex !important;
-    opacity: 1 !important;
-  }
-
-  .nav-links li {
-    margin: 0;
-  }
-
-  .nav-links a {
-    font-size: 0.95rem;
-    letter-spacing: 0.25em;
-  }
-}
 @media (max-width: 900px) {
   .reviews-hero, .reviews-grid, .review-form-section { padding: 50px 24px; }
   .reviews-grid { grid-template-columns: 1fr; }
 }
-/* ══════════════════════════════════
-   LEFT-SIDE SLIDE DRAWER MENU
-══════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Keep top header bar layering intact */
-  nav {
-    position: relative;
-    z-index: 1000;
-  }
-
-  /* Left-anchored Side Drawer */
-  .nav-links {
-    position: fixed;
-    top: 0;
-    left: 0;                   /* Anchored to the LEFT edge */
-    right: auto;               /* Clear right alignment */
-    width: 60vw;               /* Covers slightly over half the screen */
-    height: 100vh;             /* Full screen height */
-    background-color: #F8B5BA; /* Matching pink theme */
-    
+  /* Hamburger Button Container */
+  .menu-toggle {
     display: flex !important;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    
-    padding: 100px 28px 40px;  /* Top padding clears header level */
-    gap: 20px;
-    box-shadow: 8px 0 25px rgba(0, 0, 0, 0.15);
-    
-    /* Start completely hidden off-screen to the LEFT */
-    transform: translateX(-100%);
-    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 999;
+    justify-content: space-between;
+    width: 26px;
+    height: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
   }
 
-  /* Slide out to 0 when menu is active */
-  .nav-links.open,
-  .nav-links.active {
-    transform: translateX(0) !important;
-    opacity: 1 !important;
-  }
-
-  .nav-links li {
-    width: 100%;
-    margin: 0;
-    border-bottom: 1px solid rgba(61, 31, 26, 0.1);
-    padding-bottom: 12px;
-  }
-
-  .nav-links a {
-    font-size: 0.85rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
+  /* The 3 horizontal lines */
+  .menu-toggle span {
     display: block;
     width: 100%;
-    text-align: left;
-  }
-
-  /* Keep hamburger / close toggle icon visible above drawer layer */
-  .menu-toggle,
-  .hamburger,
-  .nav-toggle {
-    position: relative;
-    z-index: 1001;
+    height: 2px;
+    background-color: #3D1F1A; /* Dark brown theme color */
+    border-radius: 2px;
+    transition: all 0.3s ease;
   }
 }
