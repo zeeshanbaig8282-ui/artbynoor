@@ -172,13 +172,19 @@ nav {
 .slideshow-container { position: relative; width: 100%; height: 100%; }
 .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; }
 .slide.active { opacity: 1; }
-.slide img { 
-  width: 100%; 
-  height: 100%; 
-  object-fit: contain; 
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Fills laptop screens edge-to-edge */
   object-position: center;
-  background-color: var(--deep);
-  display: block; 
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .slide img {
+    object-fit: contain; /* Keeps full 16:9 view on mobile screens */
+    background-color: var(--deep);
+  }
 }
 .slideshow-loading, .slideshow-empty {
   position: absolute; inset: 0;
