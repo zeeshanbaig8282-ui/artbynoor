@@ -22,47 +22,55 @@ function submitBooking(e) {
 }
 
 /* ══════════════════════════════════
-   REVIEWS SYSTEM
+   REVIEWS SYSTEM (VERCEL KV / API)
 ══════════════════════════════════ */
 
-function getStoredReviews() {
-  const stored = localStorage.getItem("artt_reviews");
-  return stored ? JSON.parse(stored) : [];
-}
-
-function renderReviews() {
+// Fetch and render reviews globally from Vercel storage
+async function renderReviews() {
   const container = document.getElementById("reviewsGrid");
   if (!container) return;
 
-  const reviews = getStoredReviews();
+  try {
+    const res = await fetch('/api/reviews');
+    const reviews = await res.json();
 
-  if (reviews.length === 0) {
+    if (!Array.isArray(reviews) || reviews.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; color: var(--light-text); font-size: 0.85rem; padding: 40px 0;">
+          No reviews yet. Be the first to leave a review below! ✨
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = reviews.map(r => `
+      <div class="review-card">
+        <div class="rc-header">
+          <div class="rc-name">${escapeHtml(r.name)}</div>
+          <div class="rc-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+        </div>
+        <div class="rc-tag">${escapeHtml(r.service)}</div>
+        <p class="rc-comment">${escapeHtml(r.comment)}</p>
+        <div class="rc-date">${r.date}</div>
+      </div>
+    `).join("");
+  } catch (err) {
+    console.error("Error loading reviews:", err);
     container.innerHTML = `
       <div style="grid-column: 1 / -1; text-align: center; color: var(--light-text); font-size: 0.85rem; padding: 40px 0;">
         No reviews yet. Be the first to leave a review below! ✨
       </div>
     `;
-    return;
   }
-
-  container.innerHTML = reviews.map(r => `
-    <div class="review-card">
-      <div class="rc-header">
-        <div class="rc-name">${escapeHtml(r.name)}</div>
-        <div class="rc-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
-      </div>
-      <div class="rc-tag">${escapeHtml(r.service)}</div>
-      <p class="rc-comment">${escapeHtml(r.comment)}</p>
-      <div class="rc-date">${r.date}</div>
-    </div>
-  `).join("");
 }
 
-function submitReview(event) {
+// Submit a new review to Vercel KV storage
+async function submitReview(event) {
   if (event) event.preventDefault();
   const form = event.target;
 
   const newReview = {
+    id: Date.now().toString(),
     name: form.elements['name'].value.trim(),
     service: form.elements['service'].value,
     rating: parseInt(form.elements['rating'].value, 10),
@@ -70,18 +78,29 @@ function submitReview(event) {
     date: new Date().toISOString().split('T')[0]
   };
 
-  const reviews = getStoredReviews();
-  reviews.unshift(newReview);
-  localStorage.setItem("artt_reviews", JSON.stringify(reviews));
+  try {
+    const res = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newReview)
+    });
 
-  form.reset();
-  renderReviews();
-  showNotify("✓ Thank you! Your review has been submitted 🌸");
+    if (res.ok) {
+      form.reset();
+      renderReviews();
+      showNotify("✓ Thank you! Your review has been published 🌸");
+    } else {
+      throw new Error("Failed to post review");
+    }
+  } catch (err) {
+    showNotify("Error submitting review. Please try again.", true);
+  }
+
   return false;
 }
 
 function escapeHtml(text) {
-  return String(text)
+  return String(text == null ? '' : text)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
