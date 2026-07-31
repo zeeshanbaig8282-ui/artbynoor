@@ -159,4 +159,23 @@ function startSlideshow(total) {
 document.addEventListener('DOMContentLoaded', () => {
   renderSlideshow();
   renderReviews();
+
+  // ─── MOBILE MENU TOGGLE ───
+  const navToggle = document.querySelector('.nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
+
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+
+    // Close menu when tapping a link (optional, for smoother UX)
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+  }
 });
