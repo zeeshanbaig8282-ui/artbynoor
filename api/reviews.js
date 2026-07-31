@@ -47,26 +47,18 @@ export default async function handler(req, res) {
       // 2. Add new review to the top
       reviews.unshift(newReview);
 
-      // 3. Save updated list using Upstash REST command format: ["artt_reviews", "value"]
-      const setResponse = await fetch(`${KV_URL}/set/artt_reviews`, {
+      // 3. Save updated list using standard Upstash command array format
+      const setResponse = await fetch(`${KV_URL}`, {
         method: "POST",
         headers: { 
           Authorization: `Bearer ${KV_TOKEN}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(JSON.stringify(reviews)),
+        body: JSON.stringify(["SET", "artt_reviews", JSON.stringify(reviews)]),
       });
 
       if (!setResponse.ok) {
-        // Fallback for standard REST pipeline format if direct endpoint fails
-        await fetch(`${KV_URL}/`, {
-          method: "POST",
-          headers: { 
-            Authorization: `Bearer ${KV_TOKEN}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(["SET", "artt_reviews", JSON.stringify(reviews)]),
-        });
+        throw new Error("Failed to update database record");
       }
 
       return res.status(200).json({ success: true, reviews });
