@@ -1,12 +1,17 @@
 export default async function handler(req, res) {
-  const KV_URL = process.env.KV_REST_API_URL;
-  const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+  // Support standard Vercel KV / Upstash / Redis environment variables
+  const KV_URL = process.env.KV_REST_API_URL || process.env.REDIS_URL || process.env.KV_URL;
+  const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.REDIS_TOKEN || process.env.KV_REST_API_READ_ONLY_TOKEN;
+
+  if (!KV_URL) {
+    return res.status(500).json({ error: "Storage environment variables are not connected." });
+  }
 
   // GET: Fetch all reviews
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     try {
       const response = await fetch(`${KV_URL}/get/artt_reviews`, {
-        headers: { Authorization: `Bearer ${KV_TOKEN}` }
+        headers: { Authorization: `Bearer ${KV_TOKEN}` },
       });
       const data = await response.json();
       const reviews = data.result ? JSON.parse(data.result) : [];
@@ -17,25 +22,25 @@ export default async function handler(req, res) {
   }
 
   // POST: Add a new review
-  if (req.method === 'POST') {
+  if (req.method === "POST") {
     try {
       const newReview = req.body;
-      
-      // Get existing reviews first
-      const getRes = await fetch(`${KV_URL}/get/artt_reviews`, {
-        headers: { Authorization: `Bearer ${KV_TOKEN}` }
+
+      // 1. Fetch current list
+      const getResponse = await fetch(`${KV_URL}/get/artt_reviews`, {
+        headers: { Authorization: `Bearer ${KV_TOKEN}` },
       });
-      const getData = await getRes.json();
+      const getData = await getResponse.json();
       let reviews = getData.result ? JSON.parse(getData.result) : [];
 
-      // Add new review at the top
+      // 2. Add new review
       reviews.unshift(newReview);
 
-      // Save back to KV
+      // 3. Save updated list
       await fetch(`${KV_URL}/set/artt_reviews`, {
-        method: 'POST',
+        method: "POST",
         headers: { Authorization: `Bearer ${KV_TOKEN}` },
-        body: JSON.stringify(JSON.stringify(reviews))
+        body: JSON.stringify(JSON.stringify(reviews)),
       });
 
       return res.status(200).json({ success: true, reviews });
