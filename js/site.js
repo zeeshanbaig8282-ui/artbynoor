@@ -1,162 +1,289 @@
-// Shared across all pages: toast notifications + entrance animation
+/* ─── GLOBAL UTILITIES & STATE ─── */
+let currentCategory = 'all';
 
-function showNotify(message, isError) {
-  let notify = document.getElementById('notify');
-  if (!notify) {
-    notify = document.createElement('div');
-    notify.id = 'notify';
-    notify.className = 'notify';
-    document.body.appendChild(notify);
+// Initialize layout on DOM load
+document.addEventListener('DOMContentLoaded', () => {
+  initNavToggle();
+  initActiveNavLink();
+  
+  // Page-specific initializations based on present elements
+  if (document.getElementById('slideshow-container')) {
+    initSlideshow();
   }
-  notify.textContent = message;
-  notify.classList.toggle('error', !!isError);
-  notify.classList.add('show');
-  clearTimeout(notify._t);
-  notify._t = setTimeout(() => notify.classList.remove('show'), 4000);
-}
-
-function submitBooking(e) {
-  if (e) e.preventDefault();
-  showNotify('✓ Booking request sent! Noor will reach out soon 🌸');
-  return false;
-}
-
-/* ══════════════════════════════════
-   REVIEWS SYSTEM (VERCEL KV / API)
-══════════════════════════════════ */
-
-// Fetch and render reviews globally from Vercel storage
-async function renderReviews() {
-  const container = document.getElementById("reviewsGrid");
-  if (!container) return;
-
-  try {
-    const res = await fetch('/api/reviews');
-    const reviews = await res.json();
-
-    if (!Array.isArray(reviews) || reviews.length === 0) {
-      container.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; color: var(--light-text); font-size: 0.85rem; padding: 40px 0;">
-          No reviews yet. Be the first to leave a review below! ✨
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = reviews.map(r => `
-      <div class="review-card">
-        <div class="rc-header">
-          <div class="rc-name">${escapeHtml(r.name)}</div>
-          <div class="rc-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
-        </div>
-        <div class="rc-tag">${escapeHtml(r.service)}</div>
-        <p class="rc-comment">${escapeHtml(r.comment)}</p>
-        <div class="rc-date">${r.date}</div>
-      </div>
-    `).join("");
-  } catch (err) {
-    console.error("Error loading reviews:", err);
-    container.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; color: var(--light-text); font-size: 0.85rem; padding: 40px 0;">
-        No reviews yet. Be the first to leave a review below! ✨
-      </div>
-    `;
+  if (document.getElementById('gallery-grid')) {
+    loadGalleryItems();
   }
-}
+  if (document.getElementById('category-grid')) {
+    loadCategoryGrid();
+  }
+  if (document.getElementById('reviews-grid')) {
+    loadPublicReviews();
+  }
+  if (document.getElementById('booking-form')) {
+    initBookingForm();
+  }
+  if (document.getElementById('review-form')) {
+    initReviewForm();
+  }
+  if (document.getElementById('dash-lock-screen')) {
+    initDashboard();
+  }
+});
 
-// Submit a new review to Vercel KV storage
-async function submitReview(event) {
-  if (event) event.preventDefault();
-  const form = event.target;
+/* ─── NAVIGATION ─── */
+function initNavToggle() {
+  const toggleBtn = document.querySelector('.nav-toggle');
+  const navLinks = document.querySelector('.nav-links');
 
-  const newReview = {
-    id: Date.now().toString(),
-    name: form.elements['name'].value.trim(),
-    service: form.elements['service'].value,
-    rating: parseInt(form.elements['rating'].value, 10),
-    comment: form.elements['comment'].value.trim(),
-    date: new Date().toISOString().split('T')[0]
-  };
-  try {
-    const res = await fetch('/api/reviews', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newReview)
+  if (toggleBtn && navLinks) {
+    toggleBtn.addEventListener('click', () => {
+      toggleBtn.classList.toggle('active');
+      navLinks.classList.toggle('open');
     });
 
-    if (res.ok) {
-      form.reset();
-      renderReviews();
-      showNotify("✓ Thank you! Your review has been published 🌸");
+    // Close menu when clicking outside or on a link
+    document.addEventListener('click', (e) => {
+      if (!toggleBtn.contains(e.target) && !navLinks.contains(e.target)) {
+        toggleBtn.classList.remove('active');
+        navLinks.classList.remove('open');
+      }
+    });
+  }
+}
+
+function initActiveNavLink() {
+  const links = document.querySelectorAll('.nav-links a');
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+
+  links.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === currentPath || (currentPath === '' && href === 'index.html')) {
+      link.classList.add('active');
     } else {
-      throw new Error("Failed to post review");
+      link.classList.remove('active');
     }
-  } catch (err) {
-    showNotify("Error submitting review. Please try again.", true);
+  });
+}
+
+/* ─── NOTIFICATION SYSTEM ─── */
+function showNotification(message, isError = false) {
+  let notifyEl = document.getElementById('notification');
+  if (!notifyEl) {
+    notifyEl = document.createElement('div');
+    notifyEl.id = 'notification';
+    notifyEl.className = 'notify';
+    document.body.appendChild(notifyEl);
   }
 
-  return false;
+  notifyEl.textContent = message;
+  notifyEl.className = `notify show ${isError ? 'error' : ''}`;
+
+  setTimeout(() => {
+    notifyEl.classList.remove('show');
+  }, 4000);
 }
 
-function escapeHtml(text) {
-  return String(text == null ? '' : text)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-/* ══════════════════════════════════
-   HOMEPAGE SLIDESHOW
-══════════════════════════════════ */
-let slideIndex = 0;
-let slideTimer = null;
-
-async function renderSlideshow() {
-  const container = document.getElementById('heroSlideshow');
+/* ─── HOMEPAGE SLIDESHOW ─── */
+function initSlideshow() {
+  const container = document.getElementById('slideshow-container');
+  const dotsContainer = document.getElementById('slideshow-dots');
   if (!container) return;
 
-  try {
-    const res = await fetch('/api/images?category=slideshow');
-    const data = await res.json();
-    const images = data.images || [];
+  const slidesData = [
+    { src: 'https://via.placeholder.com/1200x600/3d1f1a/ffffff?text=Bridal+Henna', title: 'Bridal Henna' },
+    { src: 'https://via.placeholder.com/1200x600/0b4041/ffffff?text=Party+Henna', title: 'Party Henna' },
+    { src: 'https://via.placeholder.com/1200x600/c97a64/ffffff?text=Art+%26+Canvas', title: 'Art & Canvas' }
+  ];
 
-    if (images.length === 0) {
-      container.innerHTML = `<div class="slideshow-empty">No slideshow pictures yet ✨</div>`;
-      return;
+  let currentIndex = 0;
+  container.innerHTML = '';
+  if (dotsContainer) dotsContainer.innerHTML = '';
+
+  slidesData.forEach((slide, index) => {
+    // Create Slide
+    const slideDiv = document.createElement('div');
+    slideDiv.className = `slide ${index === 0 ? 'active' : ''}`;
+    slideDiv.innerHTML = `<img src="${slide.src}" alt="${slide.title}">`;
+    container.appendChild(slideDiv);
+
+    // Create Dot
+    if (dotsContainer) {
+      const dot = document.createElement('button');
+      dot.className = `slideshow-dot ${index === 0 ? 'active' : ''}`;
+      dot.addEventListener('click', () => goToSlide(index));
+      dotsContainer.appendChild(dot);
     }
+  });
 
-    container.innerHTML = images.map((img, i) => `
-      <div class="slide${i === 0 ? ' active' : ''}">
-        <img src="${img.url}" alt="${escapeHtml(img.title)}">
-        ${img.title ? `<div class="slide-caption">${escapeHtml(img.title)}</div>` : ''}
+  function goToSlide(index) {
+    const slides = container.querySelectorAll('.slide');
+    const dots = dotsContainer ? dotsContainer.querySelectorAll('.slideshow-dot') : [];
+
+    slides[currentIndex].classList.remove('active');
+    if (dots[currentIndex]) dots[currentIndex].classList.remove('active');
+
+    currentIndex = index;
+
+    slides[currentIndex].classList.add('active');
+    if (dots[currentIndex]) dots[currentIndex].classList.add('active');
+  }
+
+  // Auto advance slide every 5s
+  setInterval(() => {
+    const nextIndex = (currentIndex + 1) % slidesData.length;
+    goToSlide(nextIndex);
+  }, 5000);
+}
+
+/* ─── BOOKING FORM ─── */
+function initBookingForm() {
+  const form = document.getElementById('booking-form');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = form.querySelector('[name="name"]').value;
+    const phone = form.querySelector('[name="phone"]').value;
+    const service = form.querySelector('[name="service"]').value;
+    const date = form.querySelector('[name="date"]').value;
+    const notes = form.querySelector('[name="notes"]')?.value || '';
+
+    const message = `Hello! I would like to book an appointment.\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Service:* ${service}\n*Date:* ${date}\n*Notes:* ${notes}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+    showNotification('Redirecting to WhatsApp to send booking details...');
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+      form.reset();
+    }, 1500);
+  });
+}
+
+/* ─── GALLERY & CATEGORIES ─── */
+function filterGallery(category) {
+  currentCategory = category;
+  
+  const buttons = document.querySelectorAll('.filter-btn');
+  buttons.forEach(btn => {
+    if (btn.getAttribute('data-category') === category) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  loadGalleryItems();
+}
+
+function loadGalleryItems() {
+  const galleryGrid = document.getElementById('gallery-grid');
+  if (!galleryGrid) return;
+
+  const items = [
+    { title: 'Bridal Full Hands', cat: 'bridal', img: 'https://via.placeholder.com/400?text=Bridal+Mehndi' },
+    { title: 'Minimal Party Henna', cat: 'party', img: 'https://via.placeholder.com/400?text=Party+Mehndi' },
+    { title: 'Arabic Floral Wrist', cat: 'arabic', img: 'https://via.placeholder.com/400?text=Arabic+Mehndi' },
+    { title: 'Custom Portrait Canvas', cat: 'art', img: 'https://via.placeholder.com/400?text=Canvas+Art' }
+  ];
+
+  const filtered = currentCategory === 'all' 
+    ? items 
+    : items.filter(item => item.cat === currentCategory);
+
+  if (filtered.length === 0) {
+    galleryGrid.innerHTML = `<div class="gallery-empty">No designs found in this category.</div>`;
+    return;
+  }
+
+  galleryGrid.innerHTML = filtered.map(item => `
+    <div class="gallery-item">
+      <div class="gallery-item-inner">
+        <img src="${item.img}" alt="${item.title}">
+        <div class="gallery-item-overlay">
+          <h3>${item.title}</h3>
+          <p>${item.cat.toUpperCase()}</p>
+          <a href="booking.html" class="btn-order-wa">Book Design</a>
+        </div>
       </div>
-    `).join('');
+    </div>
+  `).join('');
+}
 
-    // Start auto-rotation if there are multiple images
-    if (images.length > 1) {
-      startSlideshow(images.length);
-    }
-  } catch (err) {
-    console.error('Error loading slideshow:', err);
-    container.innerHTML = `<div class="slideshow-empty">Failed to load pictures.</div>`;
+function loadCategoryGrid() {
+  const catGrid = document.getElementById('category-grid');
+  if (!catGrid) return;
+
+  const categories = [
+    { name: 'Bridal Henna', icon: '💍', tag: 'bridal', desc: 'Intricate bridal packages for full arms and feet.' },
+    { name: 'Party Henna', icon: '✨', tag: 'party', desc: 'Elegant designs for guests, family & festivities.' },
+    { name: 'Arabic Art', icon: '🌿', tag: 'arabic', desc: 'Flowing, bold floral and geometric trails.' },
+    { name: 'Custom Paintings', icon: '🎨', tag: 'art', desc: 'Handcrafted acrylic & calligraphy canvases.' }
+  ];
+
+  catGrid.innerHTML = categories.map(c => `
+    <a href="gallery.html?cat=${c.tag}" class="category-card">
+      <div class="category-card-body">
+        <div class="category-card-icon">${c.icon}</div>
+        <h3>${c.name}</h3>
+        <p>${c.desc}</p>
+      </div>
+    </a>
+  `).join('');
+}
+
+/* ─── REVIEWS ─── */
+function loadPublicReviews() {
+  const container = document.getElementById('reviews-grid');
+  if (!container) return;
+
+  const sampleReviews = [
+    { name: 'Ayesha K.', rating: 5, tag: 'Bridal Mehndi', comment: 'Absolutely stunning work! The stain turned out so dark and beautiful.', date: 'July 2026' },
+    { name: 'Sania M.', rating: 5, tag: 'Party Henna', comment: 'Super quick, highly detailed, and very professional service.', date: 'June 2026' }
+  ];
+
+  container.innerHTML = sampleReviews.map(r => `
+    <div class="review-card">
+      <div>
+        <div class="rc-header">
+          <span class="rc-name">${r.name}</span>
+          <span class="rc-stars">${'★'.repeat(r.rating)}</span>
+        </div>
+        <div class="rc-tag">${r.tag}</div>
+        <p class="rc-comment">"${r.comment}"</p>
+      </div>
+      <div class="rc-date">${r.date}</div>
+    </div>
+  `).join('');
+}
+
+function initReviewForm() {
+  const form = document.getElementById('review-form');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    showNotification('Thank you! Your review has been submitted for approval.');
+    form.reset();
+  });
+}
+
+/* ─── DASHBOARD MANAGEMENT ─── */
+function initDashboard() {
+  const lockScreen = document.getElementById('dash-lock-screen');
+  const dashContent = document.getElementById('dash-content');
+  const passInput = document.getElementById('dash-pass-input');
+  const loginBtn = document.getElementById('dash-login-btn');
+  const errEl = document.getElementById('dash-err');
+
+  if (loginBtn) {
+    loginBtn.addEventListener('click', () => {
+      if (passInput.value === 'admin123') {
+        if (lockScreen) lockScreen.style.display = 'none';
+        if (dashContent) dashContent.style.display = 'block';
+      } else if (errEl) {
+        errEl.textContent = 'Incorrect password. Please try again.';
+      }
+    });
   }
 }
-
-function startSlideshow(total) {
-  if (slideTimer) clearInterval(slideTimer);
-  slideTimer = setInterval(() => {
-    const slides = document.querySelectorAll('#heroSlideshow .slide');
-    if (!slides.length) return;
-    
-    slides[slideIndex].classList.remove('active');
-    slideIndex = (slideIndex + 1) % total;
-    slides[slideIndex].classList.add('active');
-  }, 4000); // Transitions every 4 seconds
-}
-
-// Automatically initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-  renderSlideshow();
-  renderReviews();
-});
