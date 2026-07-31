@@ -107,39 +107,26 @@ function escapeHtml(text) {
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
 }
-
 /* ══════════════════════════════════
-   GLOBAL MOBILE MENU & INIT
+   HOMEPAGE SLIDESHOW
 ══════════════════════════════════ */
+let slideIndex = 0;
+let slideTimer = null;
 
-// Global Event Listener for Mobile Toggle
-document.addEventListener('click', (e) => {
-  const toggleBtn = e.target.closest('.menu-toggle, .hamburger, .nav-toggle');
-  const navLinks = document.querySelector('.nav-links');
+async function renderSlideshow() {
+  const container = document.getElementById('heroSlideshow');
+  if (!container) return;
 
-  // If clicked on menu button
-  if (toggleBtn && navLinks) {
-    navLinks.classList.toggle('active');
-    navLinks.classList.toggle('open');
-    toggleBtn.classList.toggle('active');
-    return;
-  }
+  try {
+    const res = await fetch('/api/images?category=slideshow');
+    const data = await res.json();
+    const images = data.images || [];
 
-  // If clicked on a menu link inside open drawer
-  if (e.target.closest('.nav-links a') && navLinks) {
-    navLinks.classList.remove('active', 'open');
-    const btn = document.querySelector('.menu-toggle, .hamburger, .nav-toggle');
-    if (btn) btn.classList.remove('active');
-  }
-});
+    if (images.length === 0) {
+      container.innerHTML = `<div class="slideshow-empty">No slideshow pictures yet ✨</div>`;
+      return;
+    }
 
-document.addEventListener('DOMContentLoaded', () => {
-  renderReviews();
-
-  document.querySelectorAll('.hero-text > *, .booking-hero-text > *, .reviews-hero > *').forEach((el, i) => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(24px)';
-    el.style.transition = `opacity 0.7s ${i * 0.12}s, transform 0.7s ${i * 0.12}s`;
-    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 100);
-  });
-});
+    container.innerHTML = images.map((img, i) => `
+      <div class="slide${i === 0 ? ' active' : ''}">
+        <img src="${img.url}"

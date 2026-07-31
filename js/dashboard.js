@@ -1,6 +1,7 @@
 let savedPasscode = '';
 
 const CATEGORIES = [
+  { id: 'slideshow', label: 'Homepage Slideshow' },
   { id: 'crochet', label: 'Crochet' },
   { id: 'painting', label: 'Painting' },
   { id: 'crafts', label: 'Crafts' },
