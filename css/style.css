@@ -1002,7 +1002,7 @@ footer {
   .dash-page { padding: 100px 20px 60px; }
   .dash-form { grid-template-columns: 1fr; }
 
-  .reviews-hero { padding: 60px 20px 30px; }
+  .reviews-hero { padding: 90px 20px 30px; }
   .reviews-grid { 
     grid-template-columns: 1fr; 
     padding: 20px 20px 60px;
