@@ -83,49 +83,67 @@ function showNotification(message, isError = false) {
   }, 4000);
 }
 
-/* ─── HOMEPAGE SLIDESHOW (DYNAMIC FETCH) ─── */
+/* ─── HOMEPAGE SLIDESHOW (ROBUST DYNAMIC FETCH) ─── */
 async function initSlideshow() {
   const container = document.getElementById('slideshow-container');
   const dotsContainer = document.getElementById('slideshow-dots');
   if (!container) return;
 
-  let slidesData = [];
+  let rawSlides = [];
 
+  // 1. Try primary endpoint /api/slideshow
   try {
-    // Fetch uploaded images from Vercel API endpoint
-    const response = await fetch('/api/slideshow');
-    if (response.ok) {
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        slidesData = data;
-      }
+    const res = await fetch('/api/slideshow');
+    if (res.ok) {
+      const data = await res.json();
+      rawSlides = Array.isArray(data) ? data : (data.slides || data.images || []);
     }
   } catch (err) {
-    console.warn('Could not fetch uploaded slideshow images, using fallback.', err);
+    console.error('Error fetching /api/slideshow:', err);
   }
 
-  // Fallback images if database is empty
-  if (slidesData.length === 0) {
-    slidesData = [
-      { url: 'https://via.placeholder.com/1200x600/3d1f1a/ffffff?text=Bridal+Henna', title: 'Bridal Henna' },
-      { url: 'https://via.placeholder.com/1200x600/0b4041/ffffff?text=Party+Henna', title: 'Party Henna' }
-    ];
+  // 2. Try secondary endpoint /api/images?category=slideshow if primary returned empty
+  if (!rawSlides || rawSlides.length === 0) {
+    try {
+      const res = await fetch('/api/images?category=slideshow');
+      if (res.ok) {
+        const data = await res.json();
+        rawSlides = Array.isArray(data) ? data : (data.images || []);
+      }
+    } catch (err) {
+      console.error('Error fetching secondary endpoint:', err);
+    }
   }
 
-  // Clear loading state message
+  console.log('Slideshow Data Received:', rawSlides);
+
+  // 3. Clear loading text
   container.innerHTML = '';
   if (dotsContainer) dotsContainer.innerHTML = '';
 
+  // 4. Render empty state if no images are uploaded
+  if (!rawSlides || rawSlides.length === 0) {
+    container.innerHTML = '<div class="slideshow-empty">No slideshow images uploaded yet.</div>';
+    return;
+  }
+
   let currentIndex = 0;
 
-  // Render dynamic slides
-  slidesData.forEach((slide, index) => {
-    const slideImgUrl = slide.url || slide.src || slide;
+  // 5. Render slides and handle properties dynamically
+  rawSlides.forEach((slide, index) => {
+    // Extract image URL regardless of object structure
+    const imageUrl = typeof slide === 'string' ? slide : (slide.url || slide.image_url || slide.src || slide.link);
 
-    // Create Slide Element
+    if (!imageUrl) return;
+
     const slideDiv = document.createElement('div');
     slideDiv.className = `slide ${index === 0 ? 'active' : ''}`;
-    slideDiv.innerHTML = `<img src="${slideImgUrl}" alt="${slide.title || 'Slide Image'}">`;
+    
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.alt = slide.title || slide.name || 'Slideshow Image';
+
+    slideDiv.appendChild(img);
     container.appendChild(slideDiv);
 
     // Create Navigation Dot
@@ -141,19 +159,24 @@ async function initSlideshow() {
     const slides = container.querySelectorAll('.slide');
     const dots = dotsContainer ? dotsContainer.querySelectorAll('.slideshow-dot') : [];
 
-    if (slides[currentIndex]) slides[currentIndex].classList.remove('active');
-    if (dots[currentIndex]) dots[currentIndex].classList.remove('active');
+    slides.forEach((s, i) => {
+      s.classList.toggle('active', i === index);
+    });
+
+    if (dots.length) {
+      dots.forEach((d, i) => {
+        d.classList.toggle('active', i === index);
+      });
+    }
 
     currentIndex = index;
-
-    if (slides[currentIndex]) slides[currentIndex].classList.add('active');
-    if (dots[currentIndex]) dots[currentIndex].classList.add('active');
   }
 
-  // Auto advance every 5 seconds
-  if (slidesData.length > 1) {
+  // 6. Auto advance every 5s if multiple slides exist
+  const totalSlides = container.querySelectorAll('.slide').length;
+  if (totalSlides > 1) {
     setInterval(() => {
-      const nextIndex = (currentIndex + 1) % slidesData.length;
+      const nextIndex = (currentIndex + 1) % totalSlides;
       goToSlide(nextIndex);
     }, 5000);
   }
