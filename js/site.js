@@ -77,7 +77,6 @@ async function submitReview(event) {
     comment: form.elements['comment'].value.trim(),
     date: new Date().toISOString().split('T')[0]
   };
-
   try {
     const res = await fetch('/api/reviews', {
       method: 'POST',
@@ -129,4 +128,35 @@ async function renderSlideshow() {
 
     container.innerHTML = images.map((img, i) => `
       <div class="slide${i === 0 ? ' active' : ''}">
-        <img src="${img.url}"
+        <img src="${img.url}" alt="${escapeHtml(img.title)}">
+        ${img.title ? `<div class="slide-caption">${escapeHtml(img.title)}</div>` : ''}
+      </div>
+    `).join('');
+
+    // Start auto-rotation if there are multiple images
+    if (images.length > 1) {
+      startSlideshow(images.length);
+    }
+  } catch (err) {
+    console.error('Error loading slideshow:', err);
+    container.innerHTML = `<div class="slideshow-empty">Failed to load pictures.</div>`;
+  }
+}
+
+function startSlideshow(total) {
+  if (slideTimer) clearInterval(slideTimer);
+  slideTimer = setInterval(() => {
+    const slides = document.querySelectorAll('#heroSlideshow .slide');
+    if (!slides.length) return;
+    
+    slides[slideIndex].classList.remove('active');
+    slideIndex = (slideIndex + 1) % total;
+    slides[slideIndex].classList.add('active');
+  }, 4000); // Transitions every 4 seconds
+}
+
+// Automatically initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  renderSlideshow();
+  renderReviews();
+});
