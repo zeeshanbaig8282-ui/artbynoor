@@ -1,11 +1,10 @@
+import Redis from 'ioredis';
+
+const redis = new Redis(process.env.REDIS_URL);
+
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: "Method not allowed" });
-
-  const KV_URL = process.env.KV_REST_API_URL || process.env.REDIS_URL || process.env.KV_URL;
-  const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.REDIS_TOKEN || process.env.KV_REST_API_READ_ONLY_TOKEN;
-
-  if (!KV_URL || !KV_TOKEN) {
-    return res.status(500).json({ error: "Storage environment variables are missing on Vercel." });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
@@ -15,33 +14,15 @@ export default async function handler(req, res) {
     }
     const { reviewId } = body;
 
-    // Get current list
-    const getRes = await fetch(`${KV_URL}/get/artt_reviews`, {
-      headers: { Authorization: `Bearer ${KV_TOKEN}` }
-    });
-    const getData = await getRes.json();
-    
-    let reviews = [];
-    if (getData.result) {
-      reviews = typeof getData.result === 'string' ? JSON.parse(getData.result) : getData.result;
-    }
+    // Fetch existing
+    const data = await redis.get('artt_reviews');
+    let reviews = data ? JSON.parse(data) : [];
 
-    // Filter out deleted review
+    // Filter out review
     reviews = reviews.filter(r => r.id !== reviewId);
 
-    // Save updated list back using standard Upstash command array format
-    const setResponse = await fetch(`${KV_URL}`, {
-      method: "POST",
-      headers: { 
-        Authorization: `Bearer ${KV_TOKEN}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(["SET", "artt_reviews", JSON.stringify(reviews)]),
-    });
-
-    if (!setResponse.ok) {
-      throw new Error("Failed to delete review record");
-    }
+    // Save back
+    await redis.set('artt_reviews', JSON.stringify(reviews));
 
     return res.status(200).json({ success: true, reviews });
   } catch (err) {
