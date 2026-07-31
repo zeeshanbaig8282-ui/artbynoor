@@ -83,30 +83,52 @@ function showNotification(message, isError = false) {
   }, 4000);
 }
 
-/* ─── HOMEPAGE SLIDESHOW ─── */
-function initSlideshow() {
+/* ─── HOMEPAGE SLIDESHOW (DYNAMIC FETCH) ─── */
+async function initSlideshow() {
   const container = document.getElementById('slideshow-container');
   const dotsContainer = document.getElementById('slideshow-dots');
   if (!container) return;
 
-  const slidesData = [
-    { src: 'https://via.placeholder.com/1200x600/3d1f1a/ffffff?text=Bridal+Henna', title: 'Bridal Henna' },
-    { src: 'https://via.placeholder.com/1200x600/0b4041/ffffff?text=Party+Henna', title: 'Party Henna' },
-    { src: 'https://via.placeholder.com/1200x600/c97a64/ffffff?text=Art+%26+Canvas', title: 'Art & Canvas' }
-  ];
+  let slidesData = [];
 
-  let currentIndex = 0;
+  try {
+    // Fetch uploaded images from Vercel API endpoint
+    const response = await fetch('/api/slideshow');
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data) && data.length > 0) {
+        slidesData = data;
+      }
+    }
+  } catch (err) {
+    console.warn('Could not fetch uploaded slideshow images, using fallback.', err);
+  }
+
+  // Fallback images if database is empty
+  if (slidesData.length === 0) {
+    slidesData = [
+      { url: 'https://via.placeholder.com/1200x600/3d1f1a/ffffff?text=Bridal+Henna', title: 'Bridal Henna' },
+      { url: 'https://via.placeholder.com/1200x600/0b4041/ffffff?text=Party+Henna', title: 'Party Henna' }
+    ];
+  }
+
+  // Clear loading state message
   container.innerHTML = '';
   if (dotsContainer) dotsContainer.innerHTML = '';
 
+  let currentIndex = 0;
+
+  // Render dynamic slides
   slidesData.forEach((slide, index) => {
-    // Create Slide
+    const slideImgUrl = slide.url || slide.src || slide;
+
+    // Create Slide Element
     const slideDiv = document.createElement('div');
     slideDiv.className = `slide ${index === 0 ? 'active' : ''}`;
-    slideDiv.innerHTML = `<img src="${slide.src}" alt="${slide.title}">`;
+    slideDiv.innerHTML = `<img src="${slideImgUrl}" alt="${slide.title || 'Slide Image'}">`;
     container.appendChild(slideDiv);
 
-    // Create Dot
+    // Create Navigation Dot
     if (dotsContainer) {
       const dot = document.createElement('button');
       dot.className = `slideshow-dot ${index === 0 ? 'active' : ''}`;
@@ -119,20 +141,22 @@ function initSlideshow() {
     const slides = container.querySelectorAll('.slide');
     const dots = dotsContainer ? dotsContainer.querySelectorAll('.slideshow-dot') : [];
 
-    slides[currentIndex].classList.remove('active');
+    if (slides[currentIndex]) slides[currentIndex].classList.remove('active');
     if (dots[currentIndex]) dots[currentIndex].classList.remove('active');
 
     currentIndex = index;
 
-    slides[currentIndex].classList.add('active');
+    if (slides[currentIndex]) slides[currentIndex].classList.add('active');
     if (dots[currentIndex]) dots[currentIndex].classList.add('active');
   }
 
-  // Auto advance slide every 5s
-  setInterval(() => {
-    const nextIndex = (currentIndex + 1) % slidesData.length;
-    goToSlide(nextIndex);
-  }, 5000);
+  // Auto advance every 5 seconds
+  if (slidesData.length > 1) {
+    setInterval(() => {
+      const nextIndex = (currentIndex + 1) % slidesData.length;
+      goToSlide(nextIndex);
+    }, 5000);
+  }
 }
 
 /* ─── BOOKING FORM ─── */
