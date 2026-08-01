@@ -163,14 +163,23 @@ async function loadCategory(category) {
 
     grid.innerHTML = images
       .map(
-        (img) => `
-      <div style="position:relative; width:130px; text-align:center; border:1px solid #ddd; padding:8px; border-radius:6px; background:#fff;">
+        (img, idx) => `
+      <div style="position:relative; width:150px; text-align:center; border:1px solid #ddd; padding:8px; border-radius:6px; background:#fff;">
         <img src="${img.url}" alt="${escapeHtml(img.title)}" style="width:100%; height:100px; object-fit:cover; border-radius:4px;">
-        <div style="font-size:12px; margin:6px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(img.title)}</div>
-        <button onclick="deleteImage('${encodeURIComponent(img.url)}', this)" 
-                style="background:#e74c3c; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; width:100%;">
-          Delete ✕
-        </button>
+        
+        <input type="text" id="caption-${category}-${idx}" value="${escapeHtml(img.title)}" 
+               style="width:100%; margin:6px 0; font-size:11px; padding:3px; border:1px solid #ccc; border-radius:3px; box-sizing:border-box; text-align:center;">
+        
+        <div style="display:flex; gap:4px; margin-top:4px;">
+          <button onclick="saveCaption('${encodeURIComponent(img.url)}', 'caption-${category}-${idx}', '${category}', this)" 
+                  style="background:#27ae60; color:white; border:none; padding:4px 6px; border-radius:4px; font-size:10px; cursor:pointer; flex:1;">
+            Save
+          </button>
+          <button onclick="deleteImage('${encodeURIComponent(img.url)}', this)" 
+                  style="background:#e74c3c; color:white; border:none; padding:4px 6px; border-radius:4px; font-size:10px; cursor:pointer; flex:1;">
+            Delete ✕
+          </button>
+        </div>
       </div>
     `
       )
