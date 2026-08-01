@@ -949,7 +949,7 @@ footer {
     right: -100%;
     width: 250px;
     height: 100vh;
-    background: rgba(255, 182, 193, 0.75); /* Updated background with 75% opacity */
+    background: rgba(255, 182, 193, 0.90); /* Updated to 90% opacity */
     flex-direction: column;
     padding: 100px 30px 30px;
     gap: 24px;
