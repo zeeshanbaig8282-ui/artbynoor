@@ -167,7 +167,7 @@ nav {
   aspect-ratio: 16 / 9;
   max-height: 80vh;
   overflow: hidden;
-  background: var(--cream); /* Matches your page background */
+  background: var(--cream);
 }
 .slideshow-container { position: relative; width: 100%; height: 100%; }
 .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; }
@@ -175,14 +175,15 @@ nav {
 .slide img {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Fills laptop screens edge-to-edge */
+  object-fit: contain; /* Keeps the full 16:9 ratio without cutting off parts on laptops */
   object-position: center;
   display: block;
+  background-color: var(--cream); /* Matches background if letterboxing occurs */
 }
 
 @media (max-width: 900px) {
   .slide img {
-    object-fit: contain; /* Keeps full 16:9 view on mobile screens */
+    object-fit: contain;
     background-color: var(--deep);
   }
 }
