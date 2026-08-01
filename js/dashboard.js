@@ -224,6 +224,41 @@ function escapeHtml(str) {
   d.textContent = str == null ? '' : str;
   return d.innerHTML;
 }
+// Function to update an image caption on Vercel Blob
+async function saveCaption(encodedUrl, inputId, category, btn) {
+  const url = decodeURIComponent(encodedUrl);
+  const input = document.getElementById(inputId);
+  const newTitle = input ? input.value.trim() : '';
+
+  if (!newTitle) {
+    alert('Caption cannot be empty.');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  try {
+    const res = await fetch('/api/update-caption', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passcode: savedPasscode, url, newTitle, category }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to update caption');
+    }
+
+    alert('Caption updated successfully!');
+    loadCategory(category);
+  } catch (err) {
+    alert('Error updating caption: ' + err.message);
+    btn.disabled = false;
+    btn.textContent = 'Save';
+  }
+}
 
 /* ══════════════════════════════════
    ADMIN REVIEW MANAGEMENT (VERCEL API)
