@@ -127,7 +127,7 @@ nav {
   transition: background 0.3s, transform 0.2s;
   text-decoration: none; display: inline-block;
 }
-.btn-primary:hover { background: var(--deep); transform: translateY(-2px); }
+.btn-primary:hover { background: var(--rose); transform: translateY(-2px); }
 
 .btn-outline {
   padding: 13px 32px;
@@ -297,10 +297,10 @@ nav {
   font-family: 'Josefin Sans', sans-serif;
   transition: all 0.3s; border: none; cursor: pointer;
 }
-.social-btn-mehndi { background: var(--deep); color: var(--gold); }
+.social-btn-mehndi { background: #ff7997; color: #ffffff; }
 .social-btn-mehndi:hover { background: var(--rose); color: white; transform: translateY(-3px); }
-.social-btn-art { background: var(--rose); color: white; }
-.social-btn-art:hover { background: var(--deep); transform: translateY(-3px); }
+.social-btn-art { background:#ff7997 ; color: white; }
+.social-btn-art:hover { background: var(--rose); transform: translateY(-3px); }
 .social-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
 .contact-divider {
