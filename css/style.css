@@ -120,7 +120,7 @@ nav {
 
 .btn-primary {
   padding: 13px 32px;
-  background: var(--rose); color: white;
+  background:#ff7997 ; color: white;
   border: none; cursor: pointer;
   font-family: 'Josefin Sans', sans-serif;
   font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
