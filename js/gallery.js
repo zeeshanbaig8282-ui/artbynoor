@@ -27,7 +27,7 @@ function initGallery(opts) {
 
 function renderUploaded(grid, items, opts) {
   grid.innerHTML = '';
-  const whatsappNumber = "923087092039";
+  const whatsappNumber = "923218516727";
 
   items.forEach((item, i) => {
     const title = item.title || 'this item';
@@ -53,7 +53,7 @@ function renderUploaded(grid, items, opts) {
 
 function renderFallback(grid, opts) {
   grid.innerHTML = '';
-  const whatsappNumber = "923087092039";
+  const whatsappNumber = "923218516727";
 
   (opts.fallback || []).forEach(item => {
     const title = item.title || 'this item';
