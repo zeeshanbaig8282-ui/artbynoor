@@ -17,7 +17,38 @@ function showNotify(message, isError) {
 
 function submitBooking(e) {
   if (e) e.preventDefault();
-  showNotify('✓ Booking request sent! Noor will reach out soon 🌸');
+
+  // 1. Put your target WhatsApp phone number here (with country code, no + or spaces)
+  const whatsappNumber = "923218516727"; 
+
+  // 2. Gather values using the field IDs from booking.html
+  const name = document.getElementById('bk-name')?.value || '';
+  const phone = document.getElementById('bk-phone')?.value || '';
+  const date = document.getElementById('bk-date')?.value || 'Not specified';
+  const eventType = document.getElementById('bk-event')?.value || 'Not selected';
+  const style = document.getElementById('bk-style')?.value || 'Not selected';
+  const people = document.getElementById('bk-people')?.value || 'Not selected';
+  const location = document.getElementById('bk-location')?.value || 'Not provided';
+  const notes = document.getElementById('bk-notes')?.value || 'None';
+
+  // 3. Format the structured message
+  const message = `✨ *NEW MEHNDI BOOKING REQUEST* ✨\n\n` +
+    `👤 *Name:* ${name}\n` +
+    `📞 *Phone:* ${phone}\n` +
+    `📅 *Event Date:* ${date}\n` +
+    `🎉 *Event Type:* ${eventType}\n` +
+    `🎨 *Mehndi Style:* ${style}\n` +
+    `👥 *Number of People:* ${people}\n` +
+    `📍 *Location:* ${location}\n` +
+    `📝 *Notes:* ${notes}`;
+
+  // 4. Construct WhatsApp redirect link
+  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+  // 5. Trigger notification toast and open WhatsApp
+  showNotify('✓ Redirecting to WhatsApp with your booking details... 🌸');
+  window.open(whatsappUrl, '_blank');
+
   return false;
 }
 
