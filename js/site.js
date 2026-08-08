@@ -1,5 +1,41 @@
 // Shared across all pages: toast notifications + entrance animation
 
+/* ══════════════════════════════════
+   PWA INSTALL PROMPT (nav "Get the app" button)
+══════════════════════════════════ */
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  showNotify('✓ App installed! Welcome to Artt by Noor 🌸');
+});
+
+function installApp() {
+  if (deferredInstallPrompt) {
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then((choice) => {
+      deferredInstallPrompt = null;
+      if (choice.outcome !== 'accepted') {
+        showNotify('Install cancelled — you can try again anytime ✨');
+      }
+    });
+  } else {
+    // Browser doesn't support the prompt (e.g. iOS Safari) or app is already installed
+    const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    if (isIos) {
+      showNotify('On iPhone/iPad: tap Share → "Add to Home Screen" 🌸');
+    } else {
+      showNotify('App is already installed, or your browser doesn\'t support install yet ✨');
+    }
+  }
+  return false;
+}
+
 function showNotify(message, isError) {
   let notify = document.getElementById('notify');
   if (!notify) {
