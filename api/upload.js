@@ -1,7 +1,12 @@
-import { put } from '@vercel/blob';
+import { createClient } from '@supabase/supabase-js';
 
 const ALLOWED_CATEGORIES = ['slideshow', 'crochet', 'painting', 'crafts', 'mehndi', 'jewelry', 'charms'];
-const MAX_BYTES = 4.2 * 1024 * 1024; // stay under Vercel's request body limit
+const MAX_BYTES = 4.2 * 1024 * 1024; // keep well under Vercel's request body limit
+const BUCKET = 'gallery-images';
+
+function getSupabase() {
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -17,6 +22,10 @@ export default async function handler(req, res) {
   }
   if (passcode !== process.env.DASHBOARD_PASSCODE) {
     res.status(401).json({ error: 'Wrong passcode' });
+    return;
+  }
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    res.status(500).json({ error: 'Server is missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY.' });
     return;
   }
   if (!ALLOWED_CATEGORIES.includes(category)) {
@@ -45,12 +54,19 @@ export default async function handler(req, res) {
     const slug = slugify(title || 'untitled');
     const pathname = `images/${category}/${Date.now()}-${slug}.${ext}`;
 
-    const blob = await put(pathname, buffer, {
-      access: 'public',
-      contentType: `image/${match[1]}`,
-    });
+    const supabase = getSupabase();
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET)
+      .upload(pathname, buffer, {
+        contentType: `image/${match[1]}`,
+        upsert: false,
+      });
 
-    res.status(200).json({ url: blob.url });
+    if (uploadError) throw uploadError;
+
+    const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(pathname);
+
+    res.status(200).json({ url: urlData.publicUrl });
   } catch (err) {
     res.status(500).json({ error: 'Upload failed: ' + (err && err.message ? err.message : 'unknown error') });
   }

@@ -1,6 +1,11 @@
-import { list } from '@vercel/blob';
+import { createClient } from '@supabase/supabase-js';
 
 const ALLOWED_CATEGORIES = ['slideshow', 'crochet', 'painting', 'crafts', 'mehndi', 'jewelry', 'charms'];
+const BUCKET = 'gallery-images';
+
+function getSupabase() {
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -15,20 +20,34 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { blobs } = await list({ prefix: `images/${category}/` });
+    const supabase = getSupabase();
+    const prefix = `images/${category}`;
 
-    const images = blobs
-      .map(b => ({
-        url: b.url,
-        title: titleFromPathname(b.pathname),
-        uploadedAt: b.uploadedAt,
-      }))
+    const { data, error } = await supabase.storage.from(BUCKET).list(prefix, {
+      limit: 1000,
+      sortBy: { column: 'created_at', order: 'desc' },
+    });
+
+    if (error) throw error;
+
+    const images = (data || [])
+      // Supabase list() can return folder placeholder entries with no metadata — skip those
+      .filter((f) => f && f.name && f.id)
+      .map((f) => {
+        const pathname = `${prefix}/${f.name}`;
+        const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(pathname);
+        return {
+          url: urlData.publicUrl,
+          title: titleFromPathname(pathname),
+          uploadedAt: f.created_at,
+        };
+      })
       .sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
 
     res.status(200).json({ images });
   } catch (err) {
-    // Most likely cause: Blob storage isn't connected to this project yet.
-    res.status(200).json({ images: [], note: 'Blob storage not configured yet' });
+    // Most likely cause: Supabase storage bucket isn't set up yet, or env vars are missing.
+    res.status(200).json({ images: [], note: 'Supabase storage not configured yet' });
   }
 }
 
@@ -40,6 +59,6 @@ function titleFromPathname(pathname) {
   return slug
     .split('-')
     .filter(Boolean)
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ') || 'Untitled';
 }

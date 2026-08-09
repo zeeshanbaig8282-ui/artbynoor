@@ -1,4 +1,19 @@
-import { list, copy, del } from '@vercel/blob';
+import { createClient } from '@supabase/supabase-js';
+
+const BUCKET = 'gallery-images';
+
+function getSupabase() {
+  return createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
+}
+
+// Public Supabase Storage URLs look like:
+// https://<project>.supabase.co/storage/v1/object/public/<bucket>/<path>
+function pathFromPublicUrl(url) {
+  const marker = `/object/public/${BUCKET}/`;
+  const idx = url.indexOf(marker);
+  if (idx === -1) throw new Error('Could not parse storage path from URL');
+  return decodeURIComponent(url.slice(idx + marker.length));
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -16,28 +31,31 @@ export default async function handler(req, res) {
     res.status(401).json({ error: 'Wrong passcode' });
     return;
   }
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    res.status(500).json({ error: 'Server is missing SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY.' });
+    return;
+  }
   if (!url || !newTitle) {
     res.status(400).json({ error: 'Missing url or new title' });
     return;
   }
 
   try {
-    // Extract current extension from url
-    const parsedUrl = new URL(url);
-    const pathname = parsedUrl.pathname;
-    const ext = pathname.split('.').pop() || 'jpg';
+    const oldPath = pathFromPublicUrl(url);
+    const ext = oldPath.split('.').pop() || 'jpg';
 
-    // Format new slug and new path
     const slug = slugify(newTitle);
-    const newPathname = `images/${category}/${Date.now()}-${slug}.${ext}`;
+    const newPath = `images/${category}/${Date.now()}-${slug}.${ext}`;
 
-    // 1. Copy old blob to new pathname with updated title in name
-    const newBlob = await copy(url, newPathname, { access: 'public' });
+    const supabase = getSupabase();
 
-    // 2. Delete the old blob
-    await del(url);
+    // Rename in place (Supabase Storage supports move within the same bucket)
+    const { error: moveError } = await supabase.storage.from(BUCKET).move(oldPath, newPath);
+    if (moveError) throw moveError;
 
-    res.status(200).json({ ok: true, url: newBlob.url });
+    const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(newPath);
+
+    res.status(200).json({ ok: true, url: urlData.publicUrl });
   } catch (err) {
     res.status(500).json({ error: 'Update failed: ' + (err && err.message ? err.message : 'unknown error') });
   }

@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.2",
     "@upstash/redis": "^1.38.0",
-    "@vercel/blob": "^0.27.0"
+    "@vercel/blob": "^2.7.0"
   }
 }
