@@ -266,6 +266,116 @@ nav {
   color: var(--light-text); margin-bottom: 16px;
 }
 
+.cert-block { margin-top: 44px; }
+
+.cert-label {
+  font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 18px;
+}
+
+.cert-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.cert-item {
+  background: rgba(253, 246, 238, 0.5);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  border-radius: 16px;
+  padding: 18px 12px;
+  text-align: center;
+  transition: transform 0.25s, border-color 0.25s;
+  font-family: 'Josefin Sans', sans-serif;
+  cursor: pointer;
+  width: 100%;
+}
+.cert-item:hover { transform: translateY(-3px); border-color: var(--rose); }
+.cert-item:active { transform: translateY(-1px); }
+
+/* ─── Certificate lightbox modal ─── */
+.cert-modal {
+  position: fixed; inset: 0; z-index: 300;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.cert-modal.open { opacity: 1; pointer-events: auto; }
+
+.cert-modal-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(46, 27, 22, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.cert-modal-box {
+  position: relative;
+  max-width: min(680px, 92vw);
+  max-height: 88vh;
+  background: var(--cream);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.4);
+  display: flex; flex-direction: column; align-items: center;
+  transform: scale(0.96) translateY(8px);
+  transition: transform 0.3s ease;
+}
+.cert-modal.open .cert-modal-box { transform: scale(1) translateY(0); }
+
+.cert-modal-img {
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 10px;
+  object-fit: contain;
+}
+
+.cert-modal-title {
+  margin-top: 14px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem; font-weight: 600;
+  color: var(--deep); text-align: center;
+}
+
+.cert-modal-close {
+  position: absolute; top: -14px; right: -14px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--rose); color: var(--cream);
+  border: 2px solid var(--cream);
+  font-size: 1.2rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  transition: background 0.25s;
+}
+.cert-modal-close:hover { background: var(--deep); }
+
+@media (max-width: 600px) {
+  .cert-modal-box { padding: 14px; }
+  .cert-modal-close { top: -10px; right: -10px; width: 30px; height: 30px; font-size: 1.05rem; }
+}
+
+.cert-icon { font-size: 1.5rem; margin-bottom: 8px; }
+
+.cert-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem; font-weight: 600; line-height: 1.25;
+  color: var(--deep); margin-bottom: 4px;
+}
+
+.cert-sub {
+  font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--light-text);
+}
+
+@media (max-width: 900px) {
+  .cert-row { grid-template-columns: 1fr; gap: 10px; }
+  .cert-block { margin-top: 32px; }
+}
+
 .about-art { 
   display: grid; 
   grid-template-columns: 1fr 1fr; 
@@ -639,26 +749,48 @@ nav {
 }
 .pricing-card .btn-book:hover { background: var(--deep); transform: translateY(-2px); }
 
-/* ─── FOOTER ─── */
+/* ─── FOOTER (floating glass pill, mirrors nav) ─── */
 footer {
-  background: var(--nav-bg); padding: 50px 80px;
+  position: relative;
+  margin: 60px 16px 16px;
+  padding: 42px 48px;
+  border-radius: 32px;
+  background: rgba(232, 180, 160, 0.28);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(253,246,238,0.35);
+  box-shadow: 0 8px 32px rgba(61,31,26,0.12);
   display: flex; justify-content: space-between; align-items: center;
   flex-wrap: wrap; gap: 20px;
+  overflow: hidden;
+}
+/* thin gold hairline echoing the nav's glass edge, drawn across the top */
+footer::before {
+  content: '';
+  position: absolute; top: 0; left: 48px; right: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 .footer-brand { 
   font-family: 'Playfair Display', serif; 
   font-size: 1.6rem; 
   font-weight: 700; 
   font-style: italic;
+  letter-spacing: 0.03em;
   color: var(--deep); 
 }
 .footer-brand em { 
-  color: #ff4d73; 
+  color: var(--rose); 
   font-style: italic; 
   font-weight: 700; 
   text-transform: lowercase;
 }
-.footer-copy { font-size: 0.62rem; letter-spacing: 0.12em; color: var(--deep); }
+.footer-copy {
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--light-text);
+}
 
 /* ─── NOTIFICATION ─── */
 .notify {
@@ -1103,7 +1235,8 @@ footer {
   .booking-form { grid-template-columns: 1fr; }
   .booking-form-section { padding: 50px 24px; }
   .pricing-cards { grid-template-columns: 1fr; }
-  footer { padding: 40px 24px; flex-direction: column; text-align: center; }
+  footer { margin: 40px 12px 12px; padding: 36px 24px; border-radius: 24px; flex-direction: column; text-align: center; }
+  footer::before { left: 24px; right: 24px; }
   .social-btns { flex-direction: column; align-items: center; }
   .about-section { gap: 40px; }
   .dash-page { padding: 100px 20px 60px; }
