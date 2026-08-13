@@ -105,6 +105,27 @@
       <p>What began as a love for creating with my hands has grown into a small studio of handmade art — from cozy crochet pieces to bridal mehndi designs.</p>
       <p>Each creation is made slowly and intentionally, blending traditional techniques with a modern touch.</p>
       <a class="btn-outline" href="gallery.html" style="margin-top:16px">View My Work</a>
+
+      <div class="cert-block">
+        <div class="cert-label">Certifications</div>
+        <div class="cert-row">
+          <button type="button" class="cert-item" data-cert="images/certificates/cert-crafting.jpg" data-cert-title="1st Position — Crafting Competition Award">
+            <div class="cert-icon">🏆</div>
+            <div class="cert-title">1st Position — Crafting</div>
+            <div class="cert-sub">Multiomics Fiesta 3.0</div>
+          </button>
+          <button type="button" class="cert-item" data-cert="images/certificates/cert-mehndi.jpg" data-cert-title="2nd Position — Mehndi Competition Award">
+            <div class="cert-icon">🥈</div>
+            <div class="cert-title">2nd Position — Mehndi</div>
+            <div class="cert-sub">Multiomics Fiesta 3.0</div>
+          </button>
+          <button type="button" class="cert-item" data-cert="images/certificates/cert-sketching.jpg" data-cert-title="3rd Position — Sketching Competition Award">
+            <div class="cert-icon">🎨</div>
+            <div class="cert-title">3rd Position — Sketching</div>
+            <div class="cert-sub">Multiomics Fiesta 3.0</div>
+          </button>
+        </div>
+      </div>
     </div>
     <div class="about-art">
       <a class="about-tile" href="gallery-crochet.html">🧶<span>Crochet</span></a>
@@ -157,8 +178,46 @@
   </footer>
 </div>
 
+<div class="cert-modal" id="certModal">
+  <div class="cert-modal-backdrop" id="certModalBackdrop"></div>
+  <div class="cert-modal-box">
+    <button type="button" class="cert-modal-close" id="certModalClose" aria-label="Close">&times;</button>
+    <img class="cert-modal-img" id="certModalImg" src="" alt="Certificate">
+    <div class="cert-modal-title" id="certModalTitle"></div>
+  </div>
+</div>
+
 <div class="notify" id="notify"></div>
 <script src="js/site.js"></script>
+<script>
+  (function () {
+    const modal = document.getElementById('certModal');
+    const modalImg = document.getElementById('certModalImg');
+    const modalTitle = document.getElementById('certModalTitle');
+    const backdrop = document.getElementById('certModalBackdrop');
+    const closeBtn = document.getElementById('certModalClose');
+
+    document.querySelectorAll('.cert-item').forEach((item) => {
+      item.addEventListener('click', () => {
+        modalImg.src = item.getAttribute('data-cert');
+        modalTitle.textContent = item.getAttribute('data-cert-title') || '';
+        modal.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    backdrop.addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', closeModal);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+  })();
+</script>
 <script defer src="/_vercel/insights/script.js"></script>
 <script>
   if ("serviceWorker" in navigator) {
