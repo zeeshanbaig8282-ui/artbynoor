@@ -47,9 +47,10 @@ function renderUploaded(grid, items, opts) {
       <div class="gallery-item-inner" style="cursor: pointer;">
         <img src="${item.url}" alt="${escapeHtml(item.title)}" loading="lazy">
       </div>
-      
-      <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
-        Order Now
+      <div class="gallery-price-wrapper" style="width: 100%; text-align: center; padding: 8px 0 4px;">
+        <span class="gallery-price">${priceLabel ? escapeHtml(priceLabel) : ''}</span>
+      </div>
+      <button class="order-now-btn" style="width: 100%; border: none; cursor: pointer;">ORDER NOW</button>
       </a>`;
 
     const imgContainer = el.querySelector('.gallery-item-inner');
@@ -78,9 +79,10 @@ function renderFallback(grid, opts) {
           <div class="gallery-item-title">${escapeHtml(item.title)}</div>
         </div>
       </div>
-      
-      <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
-        Order Now
+<div class="gallery-price-wrapper" style="width: 100%; text-align: center; padding: 8px 0 4px;">
+        <span class="gallery-price">${priceLabel ? escapeHtml(priceLabel) : ''}</span>
+      </div>
+      <button class="order-now-btn" style="width: 100%; border: none; cursor: pointer;">ORDER NOW</button>
       </a>`;
     grid.appendChild(el);
   });
@@ -137,7 +139,7 @@ function ensureGalleryModalExists() {
       <img id="gallery-lightbox-img" class="cert-modal-img" src="" alt="" />
       <button class="gallery-nav-btn next" aria-label="Next">&#10095;</button>
       <div id="gallery-lightbox-title" class="cert-modal-title"></div>
-      <div id="gallery-lightbox-price" style="font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60; margin-top: 4px;"></div>
+<div id="gallery-lightbox-price" class="gallery-price" style="margin-top: 4px; text-align: center;"></div>
       <a id="gallery-lightbox-order" href="" target="_blank" rel="noopener noreferrer" class="btn-order-wa" style="margin-top: 12px; border-radius: 999px; padding: 10px 24px; width: auto; display: inline-block;">
         Order Now
       </a>

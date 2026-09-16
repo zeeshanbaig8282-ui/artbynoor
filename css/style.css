@@ -1474,12 +1474,19 @@ html.app-mode footer {
   .gallery-nav-btn.next { right: 6px; }
 }
 /* Make price bold, clean, and prominent */
+.gallery-price-wrapper {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
 .gallery-price {
   font-family: 'Josefin Sans', sans-serif !important;
   font-size: 1.15rem !important;
   font-weight: 700 !important;
-  color: var(--rose) !important;
+  color: var(--rose, #c26c60) !important;
   letter-spacing: 0.05em;
-  margin-bottom: 8px;
-  display: block;
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
