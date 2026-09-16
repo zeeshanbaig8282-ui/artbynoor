@@ -47,12 +47,10 @@ function renderUploaded(grid, items, opts) {
       <div class="gallery-item-inner">
         <img src="${item.url}" alt="${escapeHtml(item.title)}" loading="lazy">
       </div>
-      <div class="gallery-item-footer" style="padding:14px 10px; text-align:center;">
-        ${priceLabel ? `<div class="gallery-item-price" style="font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60; margin-bottom:10px;">${escapeHtml(priceLabel)}</div>` : ''}
-        <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
-          Order Now
-        </a>
-      </div>`;
+      ${priceLabel ? `<div class="gallery-item-price" style="padding: 10px 0 0; text-align: center; font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60;">${escapeHtml(priceLabel)}</div>` : ''}
+      <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
+        Order Now
+      </a>`;
     grid.appendChild(el);
   });
 }
@@ -74,12 +72,10 @@ function renderFallback(grid, opts) {
           <div class="gallery-item-title">${escapeHtml(item.title)}</div>
         </div>
       </div>
-      <div class="gallery-item-footer" style="padding:14px 10px; text-align:center;">
-        ${priceLabel ? `<div class="gallery-item-price" style="font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60; margin-bottom:10px;">${escapeHtml(priceLabel)}</div>` : ''}
-        <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
-          Order Now
-        </a>
-      </div>`;
+      ${priceLabel ? `<div class="gallery-item-price" style="padding: 10px 0 0; text-align: center; font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60;">${escapeHtml(priceLabel)}</div>` : ''}
+      <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
+        Order Now
+      </a>`;
     grid.appendChild(el);
   });
   if (!opts.fallback || opts.fallback.length === 0) {
