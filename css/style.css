@@ -902,27 +902,10 @@ footer::before {
   font-style: italic;
   font-weight: 600;
 }
-/* ─── STANDALONE GALLERY ORDER BUTTON ─── */
+/* Hide Order Now button on gallery cards */
 .gallery-item .btn-order-wa {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 14px 20px;
-  background-color: #c23b5e; /* Dark Pink */
-  color: #ffffff;
-  font-family: 'Josefin Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: 0 0 14px 14px; /* Matches card rounded corners */
-  transition: background-color 0.3s ease, color 0.3s ease;
+  display: none !important;
 }
-
-.gallery-item .btn-order-wa:hover {
-  background-color: #9e2a47; /* Darker Pink on Hover */
-  color: #ffffff;
 }
 /* ══════════════════════════════════
    REVIEWS PAGE
