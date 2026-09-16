@@ -36,9 +36,11 @@ export default async function handler(req, res) {
       .map((f) => {
         const pathname = `${prefix}/${f.name}`;
         const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(pathname);
+        const { title, price } = parsePathname(pathname);
         return {
           url: urlData.publicUrl,
-          title: titleFromPathname(pathname),
+          title,
+          price,
           uploadedAt: f.created_at,
         };
       })
@@ -51,14 +53,30 @@ export default async function handler(req, res) {
   }
 }
 
-function titleFromPathname(pathname) {
+// Filenames are stored as: <timestamp>-<price-or-"na">-<title-slug>.<ext>
+// Images uploaded before the price feature existed won't have the price
+// segment, so we only treat the second part as a price if it's "na" or
+// purely numeric — otherwise we fall back to treating everything after
+// the timestamp as the title slug (old behavior), with no price.
+function parsePathname(pathname) {
   const filename = pathname.split('/').pop() || '';
   const withoutExt = filename.replace(/\.[a-zA-Z0-9]+$/, '');
-  // stored as: <timestamp>-<slug>
-  const slug = withoutExt.replace(/^\d+-/, '');
-  return slug
+  const parts = withoutExt.split('-');
+
+  let price = '';
+  let slugParts = parts.slice(1); // drop the leading timestamp
+
+  if (slugParts.length > 1 && (slugParts[0] === 'na' || /^\d+$/.test(slugParts[0]))) {
+    if (slugParts[0] !== 'na') price = slugParts[0];
+    slugParts = slugParts.slice(1);
+  }
+
+  const slug = slugParts.join('-');
+  const title = slug
     .split('-')
     .filter(Boolean)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ') || 'Untitled';
+
+  return { title, price };
 }

@@ -25,14 +25,21 @@ function initGallery(opts) {
     .catch(() => renderFallback(grid, opts));
 }
 
+function buildOrderUrl(title, price) {
+  const whatsappNumber = "923218516727";
+  const label = title || 'this item';
+  const message = price
+    ? `Hi! I'd like to order: ${label} — Rs ${price}`
+    : `Hi! I'd like to order: ${label}`;
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+}
+
 function renderUploaded(grid, items, opts) {
   grid.innerHTML = '';
-  const whatsappNumber = "923218516727";
 
-  items.forEach((item, i) => {
-    const title = item.title || 'this item';
-    const encodedMsg = encodeURIComponent(`Hi! I am interested in ordering: ${title}`);
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+  items.forEach((item) => {
+    const whatsappUrl = buildOrderUrl(item.title, item.price);
+    const priceLabel = item.price ? `Rs ${item.price}` : '';
 
     const el = document.createElement('div');
     el.className = 'gallery-item';
@@ -40,9 +47,8 @@ function renderUploaded(grid, items, opts) {
       <div class="gallery-item-inner">
         <img src="${item.url}" alt="${escapeHtml(item.title)}" loading="lazy">
       </div>
-      <div class="gallery-item-overlay">
-        <h3>${escapeHtml(item.title)}</h3>
-        <p>${escapeHtml(opts.categoryLabel)}</p>
+      <div class="gallery-item-footer" style="padding:14px 10px; text-align:center;">
+        ${priceLabel ? `<div class="gallery-item-price" style="font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60; margin-bottom:10px;">${escapeHtml(priceLabel)}</div>` : ''}
         <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
           Order Now
         </a>
@@ -53,12 +59,10 @@ function renderUploaded(grid, items, opts) {
 
 function renderFallback(grid, opts) {
   grid.innerHTML = '';
-  const whatsappNumber = "923218516727";
 
   (opts.fallback || []).forEach(item => {
-    const title = item.title || 'this item';
-    const encodedMsg = encodeURIComponent(`Hi! I am interested in ordering: ${title}`);
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+    const whatsappUrl = buildOrderUrl(item.title, item.price);
+    const priceLabel = item.price ? `Rs ${item.price}` : '';
 
     const el = document.createElement('div');
     el.className = 'gallery-item' + (item.size ? ' ' + item.size : '');
@@ -70,9 +74,8 @@ function renderFallback(grid, opts) {
           <div class="gallery-item-title">${escapeHtml(item.title)}</div>
         </div>
       </div>
-      <div class="gallery-item-overlay">
-        <h3>${escapeHtml(item.title)}</h3>
-        <p>${escapeHtml(item.desc)}</p>
+      <div class="gallery-item-footer" style="padding:14px 10px; text-align:center;">
+        ${priceLabel ? `<div class="gallery-item-price" style="font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60; margin-bottom:10px;">${escapeHtml(priceLabel)}</div>` : ''}
         <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
           Order Now
         </a>

@@ -69,6 +69,7 @@ async function uploadImage() {
   const fileInput = document.getElementById('uploadFile');
   const category = document.getElementById('uploadCategory').value;
   const title = document.getElementById('uploadTitle').value.trim();
+  const price = document.getElementById('uploadPrice').value.trim();
 
   if (!fileInput.files || fileInput.files.length === 0) {
     alert('Please select a picture to upload.');
@@ -95,7 +96,7 @@ async function uploadImage() {
     const res = await fetch('/api/upload', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ passcode: savedPasscode, category, title, dataUrl }),
+      body: JSON.stringify({ passcode: savedPasscode, category, title, price, dataUrl }),
     });
 
     const data = await res.json();
@@ -107,6 +108,7 @@ async function uploadImage() {
     alert('Picture uploaded successfully!');
     fileInput.value = '';
     document.getElementById('uploadTitle').value = '';
+    document.getElementById('uploadPrice').value = '';
     document.getElementById('uploadPreview').style.display = 'none';
 
     // Refresh category grids
@@ -167,11 +169,14 @@ async function loadCategory(category) {
       <div style="position:relative; width:150px; text-align:center; border:1px solid #ddd; padding:8px; border-radius:6px; background:#fff;">
         <img src="${img.url}" alt="${escapeHtml(img.title)}" style="width:100%; height:100px; object-fit:cover; border-radius:4px;">
         
-        <input type="text" id="caption-${category}-${idx}" value="${escapeHtml(img.title)}" 
-               style="width:100%; margin:6px 0; font-size:11px; padding:3px; border:1px solid #ccc; border-radius:3px; box-sizing:border-box; text-align:center;">
+        <input type="text" id="caption-${category}-${idx}" value="${escapeHtml(img.title)}" placeholder="Caption"
+               style="width:100%; margin:6px 0 4px; font-size:11px; padding:3px; border:1px solid #ccc; border-radius:3px; box-sizing:border-box; text-align:center;">
+
+        <input type="number" id="price-${category}-${idx}" value="${escapeHtml(img.price || '')}" placeholder="Price (Rs)" min="0" step="1"
+               style="width:100%; margin:0 0 4px; font-size:11px; padding:3px; border:1px solid #ccc; border-radius:3px; box-sizing:border-box; text-align:center;">
         
         <div style="display:flex; gap:4px; margin-top:4px;">
-          <button onclick="saveCaption('${encodeURIComponent(img.url)}', 'caption-${category}-${idx}', '${category}', this)" 
+          <button onclick="saveCaption('${encodeURIComponent(img.url)}', 'caption-${category}-${idx}', 'price-${category}-${idx}', '${category}', this)" 
                   style="background:#27ae60; color:white; border:none; padding:4px 6px; border-radius:4px; font-size:10px; cursor:pointer; flex:1;">
             Save
           </button>
@@ -224,11 +229,14 @@ function escapeHtml(str) {
   d.textContent = str == null ? '' : str;
   return d.innerHTML;
 }
-// Function to update an image caption on Vercel Blob
-async function saveCaption(encodedUrl, inputId, category, btn) {
+
+// Function to update an image's caption and price on Vercel Blob
+async function saveCaption(encodedUrl, captionInputId, priceInputId, category, btn) {
   const url = decodeURIComponent(encodedUrl);
-  const input = document.getElementById(inputId);
-  const newTitle = input ? input.value.trim() : '';
+  const captionInput = document.getElementById(captionInputId);
+  const priceInput = document.getElementById(priceInputId);
+  const newTitle = captionInput ? captionInput.value.trim() : '';
+  const newPrice = priceInput ? priceInput.value.trim() : '';
 
   if (!newTitle) {
     alert('Caption cannot be empty.');
@@ -242,7 +250,7 @@ async function saveCaption(encodedUrl, inputId, category, btn) {
     const res = await fetch('/api/update-caption', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ passcode: savedPasscode, url, newTitle, category }),
+      body: JSON.stringify({ passcode: savedPasscode, url, newTitle, newPrice, category }),
     });
 
     const data = await res.json();
@@ -251,10 +259,10 @@ async function saveCaption(encodedUrl, inputId, category, btn) {
       throw new Error(data.error || 'Failed to update caption');
     }
 
-    alert('Caption updated successfully!');
+    alert('Saved successfully!');
     loadCategory(category);
   } catch (err) {
-    alert('Error updating caption: ' + err.message);
+    alert('Error saving: ' + err.message);
     btn.disabled = false;
     btn.textContent = 'Save';
   }

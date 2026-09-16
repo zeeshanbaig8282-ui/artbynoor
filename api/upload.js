@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { passcode, category, title, dataUrl } = req.body || {};
+  const { passcode, category, title, price, dataUrl } = req.body || {};
 
   if (!process.env.DASHBOARD_PASSCODE) {
     res.status(500).json({ error: 'Server is missing DASHBOARD_PASSCODE. See README.' });
@@ -52,7 +52,8 @@ export default async function handler(req, res) {
     }
 
     const slug = slugify(title || 'untitled');
-    const pathname = `images/${category}/${Date.now()}-${slug}.${ext}`;
+    const pricePart = encodePrice(price);
+    const pathname = `images/${category}/${Date.now()}-${pricePart}-${slug}.${ext}`;
 
     const supabase = getSupabase();
     const { error: uploadError } = await supabase.storage
@@ -70,6 +71,15 @@ export default async function handler(req, res) {
   } catch (err) {
     res.status(500).json({ error: 'Upload failed: ' + (err && err.message ? err.message : 'unknown error') });
   }
+}
+
+// Encodes a price into a filename-safe segment. Digits only.
+// Uses "na" as a marker when no price was provided, so it can be
+// distinguished from an actual price of 0 when parsed back out later.
+function encodePrice(price) {
+  if (price === undefined || price === null) return 'na';
+  const digits = String(price).replace(/[^0-9]/g, '');
+  return digits ? digits : 'na';
 }
 
 function slugify(str) {

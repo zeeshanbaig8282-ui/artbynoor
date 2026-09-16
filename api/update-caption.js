@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { passcode, url, newTitle, category } = req.body || {};
+  const { passcode, url, newTitle, newPrice, category } = req.body || {};
 
   if (!process.env.DASHBOARD_PASSCODE) {
     res.status(500).json({ error: 'Server is missing DASHBOARD_PASSCODE.' });
@@ -45,7 +45,8 @@ export default async function handler(req, res) {
     const ext = oldPath.split('.').pop() || 'jpg';
 
     const slug = slugify(newTitle);
-    const newPath = `images/${category}/${Date.now()}-${slug}.${ext}`;
+    const pricePart = encodePrice(newPrice);
+    const newPath = `images/${category}/${Date.now()}-${pricePart}-${slug}.${ext}`;
 
     const supabase = getSupabase();
 
@@ -59,6 +60,13 @@ export default async function handler(req, res) {
   } catch (err) {
     res.status(500).json({ error: 'Update failed: ' + (err && err.message ? err.message : 'unknown error') });
   }
+}
+
+// Same encoding rule as in api/upload.js — must stay in sync.
+function encodePrice(price) {
+  if (price === undefined || price === null) return 'na';
+  const digits = String(price).replace(/[^0-9]/g, '');
+  return digits ? digits : 'na';
 }
 
 function slugify(str) {
