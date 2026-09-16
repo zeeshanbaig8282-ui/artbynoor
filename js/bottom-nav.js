@@ -45,7 +45,8 @@
 
   /* ── 4. Build the bar ─────────────────────────────────────── */
   function build() {
-    var bar = document.createElement('nav');
+    var bar = document.createElement('div');
+bar.setAttribute('role', 'navigation');
     bar.className = 'app-tabbar';
     bar.setAttribute('aria-label', 'App navigation');
 
