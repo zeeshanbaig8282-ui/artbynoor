@@ -1,4 +1,4 @@
-const CACHE_NAME = "artt-by-noor-v3";
+const CACHE_NAME = "artt-by-noor-v4";
 const OFFLINE_URLS = [
   "/index.html",
   "/gallery.html",
