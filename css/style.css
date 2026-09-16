@@ -588,52 +588,54 @@ nav {
 
 .filter-btn:hover, .filter-btn.active { background: var(--rose); color: white; border-color: var(--rose); }
 
-.gallery-grid { padding: 20px 60px 80px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.gallery-grid {
+  padding: 20px 60px 80px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
 
-.gallery-item { 
-  position: relative; 
-  overflow: hidden; 
-  cursor: pointer; 
-  background: var(--blush); 
-  border-radius: 16px !important;
-  border: 1.5px solid var(--gold) !important; /* Fixed unit */
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  background: var(--blush);
+  border-radius: 16px;
+  border: 1.5px solid var(--gold);
   box-shadow: 0 8px 20px rgba(61, 31, 26, 0.08);
-  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .gallery-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 14px 28px rgba(61, 31, 26, 0.15);
-  border-color: var(--rose) !important;
+  border-color: var(--rose);
 }
-
-.gallery-item.tall { grid-row: span 2; }
-.gallery-item.wide { grid-column: span 2; }
 
 .gallery-item-inner {
   width: 100%;
   aspect-ratio: 1 / 1;
-  height: auto;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  transition: transform 0.5s;
-  background: linear-gradient(135deg, #e8c5b0 0%, #d4a090 100%);
-  position: relative; 
+  position: relative;
   overflow: hidden;
-  border-radius: 14px;
+  background: linear-gradient(135deg, #e8c5b0 0%, #d4a090 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
 }
-
-.gallery-item:hover .gallery-item-inner { transform: scale(1.02); }
 
 .gallery-item-inner img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: contain; 
-  background-color: var(--blush);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
-  transition: transform 0.5s;
+  transition: transform 0.4s ease;
 }
-.gallery-item:hover .gallery-item-inner img { transform: scale(1.06); }
+
+.gallery-item:hover .gallery-item-inner img {
+  transform: scale(1.04);
+}
 
 .gallery-item-fallback { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .gallery-item-emoji { font-size: 3rem; margin-bottom: 14px; }
@@ -1377,5 +1379,18 @@ html.app-mode footer {
     transform: translateX(-50%);
     width: 420px;
     animation: none;   /* translateX would fight the slide-in keyframe */
+  }
+}
+/* Mobile Responsiveness for Gallery Grid */
+@media (max-width: 768px) {
+  .gallery-grid {
+    grid-template-columns: 1fr; /* Switch from 3 columns to 1 column */
+    padding: 20px 20px 40px;   /* Reduce horizontal padding for smaller screens */
+    gap: 16px;                 /* Slightly tighter gap between cards */
+  }
+
+  .gallery-item-inner {
+    aspect-ratio: 4 / 3;       /* Adjust aspect ratio slightly for better screen space on mobile */
+    padding: 8px;
   }
 }
