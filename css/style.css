@@ -1526,3 +1526,26 @@ html.app-mode footer {
   overflow: hidden;
   border-radius: 16px;
 }
+/* ─── HIDE ORDER NOW TEXT & BUTTONS ON CARDS ─── */
+.gallery-grid .gallery-item :is(a, div, span, button, p):nth-last-child(1):not(.gallery-price):not(.gallery-item-inner) {
+  display: none !important;
+}
+
+/* Fallback: target any text containing ORDER NOW within card grid */
+.gallery-grid .gallery-item * {
+  text-transform: uppercase;
+}
+
+.gallery-grid .gallery-item a,
+.gallery-grid .gallery-item .btn-order-wa,
+.gallery-grid .gallery-item [class*="order"],
+.gallery-grid .gallery-item [class*="btn"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+}
