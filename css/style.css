@@ -1268,3 +1268,113 @@ footer::before {
     font-size: 0.8rem;
   }
 }
+/* ══════════════════════════════════════════════════════════════
+   APP MODE — floating bottom tab bar (installed PWA only)
+   Everything below is scoped to html.app-mode, which is added by
+   js/bottom-nav.js ONLY when the site runs as an installed app.
+   Normal browser visitors are completely unaffected.
+   PASTE THIS AT THE VERY END OF css/style.css
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Slim down the top pill: logo only, no hamburger, no CTA ── */
+html.app-mode nav {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  padding: 12px 20px;
+  /* nudge below the phone status bar / notch */
+  top: calc(10px + env(safe-area-inset-top, 0px));
+}
+html.app-mode .nav-toggle,
+html.app-mode .nav-links,
+html.app-mode .nav-cta {
+  display: none !important;
+}
+html.app-mode .nav-logo {
+  grid-column: 1;
+  justify-self: center;
+  margin-left: 0;
+}
+
+/* ── The floating bar itself ──────────────────────────────── */
+.app-tabbar {
+  position: fixed;
+  z-index: 300;
+  left: 16px;
+  right: 16px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  padding: 10px 8px;
+  border-radius: 999px;
+
+  background: rgba(232, 180, 160, 0.30);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgba(253, 246, 238, 0.38);
+  box-shadow: 0 10px 34px rgba(61, 31, 26, 0.18);
+
+  animation: tabbarIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes tabbarIn {
+  from { transform: translateY(120%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Each icon ────────────────────────────────────────────── */
+.app-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 44px;              /* comfortable tap target */
+  border-radius: 999px;
+  color: var(--deep);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.22s ease, background 0.22s ease, transform 0.18s ease;
+}
+
+.app-tab svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.app-tab:active {
+  transform: scale(0.88);
+}
+
+/* ── Active tab: rose colour + soft cream pill behind it ──── */
+.app-tab.active {
+  color: var(--rose);
+  background: rgba(253, 246, 238, 0.55);
+}
+.app-tab.active svg {
+  stroke-width: 2.1;
+}
+
+/* ── Keep page content clear of the bar ───────────────────── */
+html.app-mode body {
+  padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Your footer sits inside .page, so give it breathing room too */
+html.app-mode footer {
+  padding-bottom: 24px;
+}
+
+/* ── Wider screens: don't stretch the bar across a desktop ── */
+@media (min-width: 640px) {
+  .app-tabbar {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 420px;
+    animation: none;   /* translateX would fight the slide-in keyframe */
+  }
+}
