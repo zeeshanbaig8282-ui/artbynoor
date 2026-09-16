@@ -47,7 +47,7 @@ function renderUploaded(grid, items, opts) {
       <div class="gallery-item-inner" style="cursor: pointer;">
         <img src="${item.url}" alt="${escapeHtml(item.title)}" loading="lazy">
       </div>
-      ${priceLabel ? `<div class="gallery-item-price" style="padding: 10px 0 0; text-align: center; font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60;">${escapeHtml(priceLabel)}</div>` : ''}
+      
       <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
         Order Now
       </a>`;
@@ -78,7 +78,7 @@ function renderFallback(grid, opts) {
           <div class="gallery-item-title">${escapeHtml(item.title)}</div>
         </div>
       </div>
-      ${priceLabel ? `<div class="gallery-item-price" style="padding: 10px 0 0; text-align: center; font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60;">${escapeHtml(priceLabel)}</div>` : ''}
+      
       <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
         Order Now
       </a>`;

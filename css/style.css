@@ -1478,7 +1478,7 @@ html.app-mode footer {
   font-family: 'Josefin Sans', sans-serif !important;
   font-size: 1.15rem !important;
   font-weight: 700 !important;
-  color: #3d1f1a !important; /* Dark brown for high contrast */
+  color: var(--rose) !important;
   letter-spacing: 0.05em;
   margin-bottom: 8px;
   display: block;
