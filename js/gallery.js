@@ -43,6 +43,7 @@ function renderUploaded(grid, items, opts) {
 
     const el = document.createElement('div');
     el.className = 'gallery-item';
+    el.style.cursor = 'pointer';
     el.innerHTML = `
       <div class="gallery-item-inner">
         <img src="${item.url}" alt="${escapeHtml(item.title)}" loading="lazy">
@@ -51,6 +52,12 @@ function renderUploaded(grid, items, opts) {
       <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-order-wa">
         Order Now
       </a>`;
+
+    const imgEl = el.querySelector('.gallery-item-inner');
+    if (imgEl) {
+      imgEl.addEventListener('click', () => openGalleryLightbox(items, index));
+    }
+
     grid.appendChild(el);
   });
 }
@@ -87,4 +94,88 @@ function escapeHtml(str) {
   const d = document.createElement('div');
   d.textContent = str == null ? '' : str;
   return d.innerHTML;
+}
+// ─── GALLERY LIGHTBOX WITH NAVIGATION ───
+let currentGalleryItems = [];
+let currentGalleryIndex = 0;
+
+function openGalleryLightbox(items, index) {
+  currentGalleryItems = items;
+  currentGalleryIndex = index;
+  ensureGalleryModalExists();
+  updateGalleryModalContent();
+  document.getElementById('gallery-lightbox').classList.add('open');
+}
+
+function updateGalleryModalContent() {
+  const item = currentGalleryItems[currentGalleryIndex];
+  if (!item) return;
+
+  const modalImg = document.getElementById('gallery-lightbox-img');
+  const modalTitle = document.getElementById('gallery-lightbox-title');
+  const modalPrice = document.getElementById('gallery-lightbox-price');
+  const modalOrder = document.getElementById('gallery-lightbox-order');
+
+  modalImg.src = item.url;
+  modalImg.alt = item.title || '';
+  modalTitle.textContent = item.title || '';
+  modalPrice.textContent = item.price ? `Rs ${item.price}` : '';
+  modalOrder.href = buildOrderUrl(item.title, item.price);
+}
+
+function ensureGalleryModalExists() {
+  if (document.getElementById('gallery-lightbox')) return;
+
+  const modal = document.createElement('div');
+  modal.id = 'gallery-lightbox';
+  modal.className = 'cert-modal';
+  modal.innerHTML = `
+    <div class="cert-modal-backdrop"></div>
+    <div class="cert-modal-box gallery-lightbox-box">
+      <button class="cert-modal-close" aria-label="Close">&times;</button>
+      <button class="gallery-nav-btn prev" aria-label="Previous">&#10094;</button>
+      <img id="gallery-lightbox-img" class="cert-modal-img" src="" alt="" />
+      <button class="gallery-nav-btn next" aria-label="Next">&#10095;</button>
+      <div id="gallery-lightbox-title" class="cert-modal-title"></div>
+      <div id="gallery-lightbox-price" style="font-family:'Cormorant Garamond', serif; font-size:1.15rem; font-weight:600; color:#c26c60; margin-top: 4px;"></div>
+      <a id="gallery-lightbox-order" href="" target="_blank" rel="noopener noreferrer" class="btn-order-wa" style="margin-top: 12px; border-radius: 999px; padding: 10px 24px;">
+        Order Now
+      </a>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  modal.querySelector('.cert-modal-backdrop').addEventListener('click', closeGalleryLightbox);
+  modal.querySelector('.cert-modal-close').addEventListener('click', closeGalleryLightbox);
+
+  modal.querySelector('.gallery-nav-btn.prev').addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryItems.length) % currentGalleryItems.length;
+    updateGalleryModalContent();
+  });
+
+  modal.querySelector('.gallery-nav-btn.next').addEventListener('click', (e) => {
+    e.stopPropagation();
+    currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryItems.length;
+    updateGalleryModalContent();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeGalleryLightbox();
+    if (e.key === 'ArrowLeft') {
+      currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryItems.length) % currentGalleryItems.length;
+      updateGalleryModalContent();
+    }
+    if (e.key === 'ArrowRight') {
+      currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryItems.length;
+      updateGalleryModalContent();
+    }
+  });
+}
+
+function closeGalleryLightbox() {
+  const modal = document.getElementById('gallery-lightbox');
+  if (modal) modal.classList.remove('open');
 }
