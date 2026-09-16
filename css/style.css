@@ -1493,3 +1493,34 @@ html.app-mode footer {
   visibility: visible !important;
   opacity: 1 !important;
 }
+/* ─── LIGHTBOX ORDER BUTTON STYLING ─── */
+.cert-modal-box .btn-order-wa,
+.gallery-lightbox-box .btn-order-wa,
+.cert-modal-box a[href*="wa.me"],
+.gallery-lightbox-box a[href*="wa.me"] {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  margin-top: 14px !important;
+  padding: 10px 24px !important;
+  background-color: #c23b5e !important; /* Dark Pink/Rose */
+  color: #ffffff !important;
+  font-family: 'Josefin Sans', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  text-decoration: none !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 12px rgba(194, 59, 94, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.cert-modal-box .btn-order-wa:hover,
+.gallery-lightbox-box .btn-order-wa:hover,
+.cert-modal-box a[href*="wa.me"]:hover,
+.gallery-lightbox-box a[href*="wa.me"]:hover {
+  background-color: #9e2a47 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(158, 42, 71, 0.4) !important;
+}
