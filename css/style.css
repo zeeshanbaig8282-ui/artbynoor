@@ -1221,13 +1221,16 @@ footer::before {
   .category-card h3 { font-size: 1.2rem !important; margin-bottom: 2px; }
   .category-card p { font-size: 0.62rem !important; line-height: 1.35; }
 
-  .gallery-grid { 
-    grid-template-columns: 1fr 1fr; 
-    gap: 12px;
-    padding: 20px 16px 60px; 
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    padding: 20px 20px 40px;
+    gap: 16px;
   }
 
-  .gallery-item-inner { aspect-ratio: 1 / 1; height: auto; }
+  .gallery-item-inner {
+    aspect-ratio: 4 / 3;
+    padding: 8px;
+  }
   .gallery-item-inner img { width: 100%; height: 100%; object-fit: contain; object-position: center; background-color: var(--blush); }
   .gallery-item-overlay { padding: 10px; }
   .gallery-item-overlay h3 { font-size: 0.95rem; line-height: 1.2; margin-bottom: 4px; }
