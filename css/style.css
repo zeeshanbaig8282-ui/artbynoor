@@ -1506,3 +1506,23 @@ html.app-mode footer {
   transform: translateY(-2px) !important;
   box-shadow: 0 6px 16px rgba(158, 42, 71, 0.4) !important;
 }
+/* ─── FORCE HIDE ORDER BUTTON ON GALLERY CARDS ─── */
+.gallery-grid .gallery-item a[href*="wa.me"],
+.gallery-grid .gallery-item .btn-order-wa,
+.gallery-grid .gallery-item-overlay .btn-order-wa,
+.gallery-item > a,
+.gallery-item-inner + a {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ensure price container has rounded bottom corners now that button is gone */
+.gallery-item {
+  overflow: hidden;
+  border-radius: 16px;
+}
