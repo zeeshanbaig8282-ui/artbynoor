@@ -281,6 +281,7 @@ function initSwipeNavigation() {
     if (absX < absY * SWIPE_MAX_ANGLE_RATIO) return; // too vertical — it's a scroll
 
     let targetIndex = null;
+    const direction = deltaX < 0 ? 'left' : 'right'; // direction of the swipe/travel
     if (deltaX < 0) {
       // swiped left → go to next page
       targetIndex = currentIndex + 1;
@@ -290,9 +291,39 @@ function initSwipeNavigation() {
     }
 
     if (targetIndex >= 0 && targetIndex < order.length) {
-      window.location.href = order[targetIndex];
+      navigateWithTransition(order[targetIndex], direction);
     }
   }, { passive: true });
+}
+
+function navigateWithTransition(url, direction) {
+  try { sessionStorage.setItem('swipeNavDirection', direction); } catch (e) {}
+
+  const page = document.querySelector('.page');
+  if (!page) {
+    window.location.href = url;
+    return;
+  }
+
+  page.classList.add(direction === 'left' ? 'swipe-exit-left' : 'swipe-exit-right');
+  // Navigate once the exit animation has (roughly) finished
+  window.setTimeout(() => { window.location.href = url; }, 240);
+}
+
+function playEnterTransition() {
+  const page = document.querySelector('.page');
+  if (!page) return;
+  const dir = document.documentElement.getAttribute('data-swipe-enter');
+  if (!dir) return;
+
+  // Double rAF: let the browser paint the offset "entering" state first,
+  // then remove it so the transition animates into place.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.documentElement.removeAttribute('data-swipe-enter');
+      try { sessionStorage.removeItem('swipeNavDirection'); } catch (e) {}
+    });
+  });
 }
 
 // Automatically initialize when page loads
@@ -300,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSlideshow();
   renderReviews();
   initSwipeNavigation();
+  playEnterTransition();
 
   // ─── MOBILE MENU TOGGLE ───
   const navToggle = document.querySelector('.nav-toggle');
