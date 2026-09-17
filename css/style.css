@@ -13,6 +13,18 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+/* ─── SWIPE PAGE TRANSITION ─── */
+.page {
+  transition: transform 0.28s ease, opacity 0.28s ease;
+  will-change: transform, opacity;
+}
+/* Outgoing page (about to navigate away) */
+.page.swipe-exit-left  { transform: translateX(-32px); opacity: 0; }
+.page.swipe-exit-right { transform: translateX(32px);  opacity: 0; }
+/* Incoming page (just loaded, animates into place) */
+html[data-swipe-enter="left"]  .page { transform: translateX(32px);  opacity: 0; }
+html[data-swipe-enter="right"] .page { transform: translateX(-32px); opacity: 0; }
+
 html { scroll-behavior: smooth; }
 
 body {
