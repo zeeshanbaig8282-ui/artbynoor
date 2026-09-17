@@ -222,10 +222,84 @@ function startSlideshow(total) {
   }, 4000); // Transitions every 4 seconds
 }
 
+/* ══════════════════════════════════
+   SWIPE NAVIGATION (bottom nav pages)
+══════════════════════════════════ */
+const SWIPE_NAV_ORDER = ['index.html', 'gallery.html', 'booking.html', 'reviews.html'];
+const SWIPE_MIN_DISTANCE = 60;   // px — minimum horizontal travel to count as a swipe
+const SWIPE_MAX_ANGLE_RATIO = 1.3; // horizontal must dominate vertical by this much
+
+function getSwipePageKey() {
+  const file = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase();
+  const normalized = file === '' ? 'index.html' : file;
+  // Treat every gallery-*.html sub-page as the "gallery.html" slot
+  if (normalized === 'gallery.html' || normalized.startsWith('gallery-')) {
+    return 'gallery.html';
+  }
+  return normalized;
+}
+
+function isAnyModalOpen() {
+  return !!document.querySelector('.cert-modal.open, .lightbox.open, .modal.open, [class*="modal"].open');
+}
+
+function initSwipeNavigation() {
+  const order = SWIPE_NAV_ORDER;
+  const currentKey = getSwipePageKey();
+  const currentIndex = order.indexOf(currentKey);
+  if (currentIndex === -1) return; // page not part of the swipeable set (e.g. dashboard)
+
+  let startX = 0;
+  let startY = 0;
+  let tracking = false;
+
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) { tracking = false; return; }
+    const target = e.target;
+    // Don't hijack swipes that start on form controls or interactive sliders
+    if (target.closest('input, textarea, select, .slideshow-container')) {
+      tracking = false;
+      return;
+    }
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+    tracking = true;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (e) => {
+    if (!tracking) return;
+    tracking = false;
+    if (isAnyModalOpen()) return;
+
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - startX;
+    const deltaY = touch.clientY - startY;
+    const absX = Math.abs(deltaX);
+    const absY = Math.abs(deltaY);
+
+    if (absX < SWIPE_MIN_DISTANCE) return;
+    if (absX < absY * SWIPE_MAX_ANGLE_RATIO) return; // too vertical — it's a scroll
+
+    let targetIndex = null;
+    if (deltaX < 0) {
+      // swiped left → go to next page
+      targetIndex = currentIndex + 1;
+    } else {
+      // swiped right → go to previous page
+      targetIndex = currentIndex - 1;
+    }
+
+    if (targetIndex >= 0 && targetIndex < order.length) {
+      window.location.href = order[targetIndex];
+    }
+  }, { passive: true });
+}
+
 // Automatically initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
   renderSlideshow();
   renderReviews();
+  initSwipeNavigation();
 
   // ─── MOBILE MENU TOGGLE ───
   const navToggle = document.querySelector('.nav-toggle');
