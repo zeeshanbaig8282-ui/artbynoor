@@ -577,18 +577,6 @@ nav {
 .category-thumb-jewelry { background: linear-gradient(135deg, #d9c1cc, #b58fa4); }
 .category-thumb-charms { background: linear-gradient(135deg, #c5cdd5, #a1abb5); }
 
-.category-thumb img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.25s ease, transform 0.35s ease;
-}
-
-.category-thumb.has-image img { opacity: 1; }
-.category-list-item:hover .category-thumb.has-image img { transform: scale(1.06); }
-
 .category-thumb::after {
   content: attr(data-icon);
   font-size: 1.85rem;
@@ -603,7 +591,6 @@ nav {
 .category-thumb-mehndi::after { content: '🌿'; }
 .category-thumb-jewelry::after { content: '💍'; }
 .category-thumb-charms::after { content: '🔮'; }
-.category-thumb.has-image::after { display: none; }
 
 .category-info {
   min-width: 0;
