@@ -326,10 +326,34 @@ function playEnterTransition() {
   });
 }
 
+async function initCategoryThumbnails() {
+  const thumbs = document.querySelectorAll('.category-thumb img[data-category]');
+  if (!thumbs.length) return;
+
+  await Promise.all(Array.from(thumbs).map(async (img) => {
+    const category = img.dataset.category;
+    try {
+      const res = await fetch(`/api/images?category=${encodeURIComponent(category)}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      const firstImage = data.images && data.images[0];
+      if (!firstImage || !firstImage.url) return;
+
+      img.addEventListener('load', () => {
+        img.parentElement.classList.add('has-image');
+      }, { once: true });
+      img.src = firstImage.url;
+    } catch (err) {
+      // Keep the emoji fallback when a category has no uploaded image.
+    }
+  }));
+}
+
 // Automatically initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
   renderSlideshow();
   renderReviews();
+  initCategoryThumbnails();
   initSwipeNavigation();
   playEnterTransition();
 
