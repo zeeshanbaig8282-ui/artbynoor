@@ -250,11 +250,22 @@ function isAnyModalOpen() {
   return !!document.querySelector('.cert-modal.open, .lightbox.open, .modal.open, [class*="modal"].open');
 }
 
+function isInstalledApp() {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.matchMedia('(display-mode: fullscreen)').matches ||
+    window.matchMedia('(display-mode: minimal-ui)').matches ||
+    navigator.standalone === true ||
+    document.referrer.startsWith('android-app://')
+  );
+}
+
 function initSwipeNavigation() {
   const order = SWIPE_NAV_ORDER;
   const currentKey = getSwipePageKey();
   const currentIndex = order.indexOf(currentKey);
   if (currentIndex === -1) return; // page not part of the swipeable set (e.g. dashboard)
+  if (!isInstalledApp()) return;   // swipe navigation only works in the installed app, not the browser
 
   let startX = 0;
   let startY = 0;
@@ -264,7 +275,7 @@ function initSwipeNavigation() {
     if (e.touches.length !== 1) { tracking = false; return; }
     const target = e.target;
     // Don't hijack swipes that start on form controls or interactive sliders
-    if (target.closest('input, textarea, select')) {
+    if (target.closest('input, textarea, select, .featured-grid')) {
       tracking = false;
       return;
     }

@@ -225,7 +225,8 @@ nav {
 /* single row — extra products scroll sideways */
 .featured-grid {
   display: flex; flex-wrap: nowrap; gap: 20px; justify-content: flex-start;
-  overflow-x: auto; padding-bottom: 14px; scroll-snap-type: x proximity;
+  overflow-x: hidden; padding-bottom: 14px;   /* no finger-swipe scrolling; use the arrow buttons */
+  touch-action: pan-y; overscroll-behavior-x: none;
   scrollbar-width: none;
 }
 .featured-grid::-webkit-scrollbar { display: none; }
@@ -241,7 +242,7 @@ nav {
 .featured-arrow:hover { background: var(--rose); color: #fff; }
 .featured-arrow.prev { left: -16px; }
 .featured-arrow.next { right: -16px; }
-.featured-card { flex: 0 0 calc((100% - 80px) / 5); min-width: 0; text-align: left; scroll-snap-align: start; }
+.featured-card { flex: 0 0 calc((100% - 80px) / 5); min-width: 0; text-align: left; }
 .featured-card-img { display: block; aspect-ratio: 1; overflow: hidden; background: #fff; border-radius: 16px; }
 .featured-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
 .featured-card:hover .featured-card-img img { transform: scale(1.05); }
