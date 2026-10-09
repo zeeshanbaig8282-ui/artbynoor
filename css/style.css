@@ -214,35 +214,6 @@ nav {
   font-size: 0.62rem; letter-spacing: 0.3em; text-transform: uppercase;
   color: var(--gold); margin-top: 6px;
 }
-.slideshow {
-  position: relative;
-  width: 100%;
-  max-width: 1200px; /* Limits maximum stretch on ultra-wide screens */
-  margin: 0 auto;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--cream);
-}
-.slideshow-container { position: relative; width: 100%; height: 100%; }
-.slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; }
-.slide.active { opacity: 1; }
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Fills the width completely without side gaps */
-  object-position: center;
-  display: block;
-}
-
-@media (max-width: 900px) {
-  .slideshow {
-    max-width: 100%;
-  }
-  .slide img {
-    object-fit: contain; /* Keeps contain on mobile so nothing important is cut off */
-    background-color: var(--deep);
-  }
-}
 /* Featured Products section */
 .featured-section {
   max-width: 1200px; margin: 50px auto; padding: 50px 30px 36px;
@@ -288,28 +259,6 @@ nav {
   .featured-arrow { width: 42px; height: 42px; font-size: 1.1rem; }
   .featured-arrow.prev { left: -8px; }
   .featured-arrow.next { right: -8px; }
-}
-.slideshow-loading, .slideshow-empty {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  color: rgba(253,246,238,0.6);
-  font-size: 0.78rem; letter-spacing: 0.1em;
-}
-.slideshow-dots {
-  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-  display: flex; gap: 10px; z-index: 5;
-}
-.slideshow-dot {
-  width: 9px; height: 9px; border-radius: 50%;
-  background: rgba(253,246,238,0.4);
-  cursor: pointer; border: none; padding: 0;
-  transition: background 0.3s;
-}
-.slideshow-dot.active { background: var(--gold); }
-.about-section {
-  padding: 100px 80px;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 80px; align-items: center;
 }
 .about-label {
   font-size: 0.65rem; letter-spacing: 0.35em; text-transform: uppercase;

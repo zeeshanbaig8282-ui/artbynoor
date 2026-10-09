@@ -174,55 +174,6 @@ function escapeHtml(text) {
     .replace(/'/g, "&#039;");
 }
 /* ══════════════════════════════════
-   HOMEPAGE SLIDESHOW
-══════════════════════════════════ */
-let slideIndex = 0;
-let slideTimer = null;
-
-async function renderSlideshow() {
-  const container = document.getElementById('heroSlideshow');
-  if (!container) return;
-
-  try {
-    const res = await fetch('/api/images?category=slideshow');
-    const data = await res.json();
-    const images = data.images || [];
-
-    if (images.length === 0) {
-      container.innerHTML = `<div class="slideshow-empty">No slideshow pictures yet ✨</div>`;
-      return;
-    }
-
-    container.innerHTML = images.map((img, i) => `
-      <div class="slide${i === 0 ? ' active' : ''}">
-        <img src="${img.url}" alt="${escapeHtml(img.title)}">
-        ${img.title ? `<div class="slide-caption">${escapeHtml(img.title)}</div>` : ''}
-      </div>
-    `).join('');
-
-    // Start auto-rotation if there are multiple images
-    if (images.length > 1) {
-      startSlideshow(images.length);
-    }
-  } catch (err) {
-    console.error('Error loading slideshow:', err);
-    container.innerHTML = `<div class="slideshow-empty">Failed to load pictures.</div>`;
-  }
-}
-
-function startSlideshow(total) {
-  if (slideTimer) clearInterval(slideTimer);
-  slideTimer = setInterval(() => {
-    const slides = document.querySelectorAll('#heroSlideshow .slide');
-    if (!slides.length) return;
-    
-    slides[slideIndex].classList.remove('active');
-    slideIndex = (slideIndex + 1) % total;
-    slides[slideIndex].classList.add('active');
-  }, 4000); // Transitions every 4 seconds
-}
-
-/* ══════════════════════════════════
    FEATURED PRODUCTS (separate section on homepage)
 ══════════════════════════════════ */
 const FEATURED_CAT_LABELS = {

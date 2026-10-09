@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 
-const ALLOWED_CATEGORIES = ['slideshow', 'crochet', 'painting', 'crafts', 'mehndi', 'jewelry', 'charms'];
+const ALLOWED_CATEGORIES = [ 'crochet', 'painting', 'crafts', 'mehndi', 'jewelry', 'charms'];
 const MAX_BYTES = 4.2 * 1024 * 1024; // keep well under Vercel's request body limit
 const BUCKET = 'gallery-images';
 
