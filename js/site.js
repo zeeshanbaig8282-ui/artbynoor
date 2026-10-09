@@ -264,7 +264,7 @@ function initSwipeNavigation() {
     if (e.touches.length !== 1) { tracking = false; return; }
     const target = e.target;
     // Don't hijack swipes that start on form controls or interactive sliders
-    if (target.closest('input, textarea, select, .slideshow-container')) {
+    if (target.closest('input, textarea, select')) {
       tracking = false;
       return;
     }
@@ -358,7 +358,6 @@ async function initCategoryThumbnails() {
 
 // Automatically initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
-  renderSlideshow();
   renderFeatured();
   renderReviews();
   initCategoryThumbnails();
