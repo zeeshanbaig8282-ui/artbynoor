@@ -184,24 +184,40 @@ async function renderSlideshow() {
   if (!container) return;
 
   try {
-    const res = await fetch('/api/images?category=slideshow');
-    const data = await res.json();
-    const images = data.images || [];
+    // Featured products picked in the dashboard come first.
+    // If none are picked yet, fall back to the old "Homepage Slideshow" pictures.
+    let images = [];
+    try {
+      const fres = await fetch('/api/featured');
+      const fdata = await fres.json();
+      images = fdata.images || [];
+    } catch (e) { /* fall through to fallback */ }
 
     if (images.length === 0) {
-      container.innerHTML = `<div class="slideshow-empty">No slideshow pictures yet ✨</div>`;
+      const res = await fetch('/api/images?category=slideshow');
+      const data = await res.json();
+      images = data.images || [];
+    }
+
+    if (images.length === 0) {
+      container.innerHTML = `<div class="slideshow-empty">No featured items yet ✨</div>`;
       return;
     }
 
-    container.innerHTML = images.map((img, i) => `
+    container.innerHTML = images.map((img, i) => {
+      const priceLabel = img.price ? `Rs ${img.price}` : '';
+      const order = img.category
+        ? `<a class="slide-order" target="_blank" rel="noopener" href="https://wa.me/923218516727?text=${encodeURIComponent("Hi! I'd like to order: " + img.title + (img.price ? ' — Rs ' + img.price : ''))}">Order Now</a>`
+        : '';
+      return `
       <div class="slide${i === 0 ? ' active' : ''}">
         <img src="${img.url}" alt="${escapeHtml(img.title)}">
-        ${img.title ? `<div class="slide-caption">${escapeHtml(img.title)}</div>` : ''}
-      </div>
-    `).join('');
+        ${img.title ? `<div class="slide-caption"><span class="slide-featured-tag">Featured</span><strong>${escapeHtml(img.title)}</strong>${priceLabel ? `<em>${escapeHtml(priceLabel)}</em>` : ''}${order}</div>` : ''}
+      </div>`;
+    }).join('');
 
-    // Start auto-rotation if there are multiple images
     if (images.length > 1) {
+      slideIndex = 0;
       startSlideshow(images.length);
     }
   } catch (err) {

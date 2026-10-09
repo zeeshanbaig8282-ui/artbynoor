@@ -243,6 +243,22 @@ nav {
     background-color: var(--deep);
   }
 }
+.slide-caption {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  padding: 40px 24px 44px;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 14px;
+  background: linear-gradient(to top, rgba(40,20,15,0.75), transparent);
+  color: #fdf6ee; text-align: center; z-index: 2;
+}
+.slide-caption strong { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; }
+.slide-caption em { font-style: normal; color: var(--gold); letter-spacing: 0.08em; }
+.slide-featured-tag {
+  flex-basis: 100%; font-size: 0.6rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold);
+}
+.slide-order {
+  background: var(--rose); color: #fff; text-decoration: none; padding: 7px 20px; border-radius: 999px;
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+}
 .slideshow-loading, .slideshow-empty {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;

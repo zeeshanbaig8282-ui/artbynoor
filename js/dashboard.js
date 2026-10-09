@@ -1,4 +1,5 @@
 let savedPasscode = '';
+let featuredUrls = [];
 
 const CATEGORIES = [
   { id: 'slideshow', label: 'Homepage Slideshow' },
@@ -157,6 +158,7 @@ async function loadCategory(category) {
     const res = await fetch(`/api/images?category=${category}`);
     const data = await res.json();
     const images = data.images || [];
+    await refreshFeaturedUrls();
 
     if (images.length === 0) {
       grid.innerHTML = '<div style="color:#888; font-size:13px;">No uploaded pictures in this category yet.</div>';
@@ -175,6 +177,12 @@ async function loadCategory(category) {
         <input type="number" id="price-${category}-${idx}" value="${escapeHtml(img.price || '')}" placeholder="Price (Rs)" min="0" step="1"
                style="width:100%; margin:0 0 4px; font-size:11px; padding:3px; border:1px solid #ccc; border-radius:3px; box-sizing:border-box; text-align:center;">
         
+        ${category === 'slideshow' ? '' : `
+        <label style="display:flex; align-items:center; justify-content:center; gap:6px; font-size:11px; margin:4px 0 6px; cursor:pointer; letter-spacing:0; text-transform:none; color:#8a6d2f;">
+          <input type="checkbox" ${featuredUrls.includes(img.url) ? 'checked' : ''} onchange="toggleFeatured('${encodeURIComponent(img.url)}', this)">
+          ⭐ Show on homepage
+        </label>`}
+
         <div style="display:flex; gap:4px; margin-top:4px;">
           <button onclick="saveCaption('${encodeURIComponent(img.url)}', 'caption-${category}-${idx}', 'price-${category}-${idx}', '${category}', this)" 
                   style="background:#27ae60; color:white; border:none; padding:4px 6px; border-radius:4px; font-size:10px; cursor:pointer; flex:1;">
@@ -191,6 +199,37 @@ async function loadCategory(category) {
       .join('');
   } catch (err) {
     grid.innerHTML = '<div style="color:#e74c3c; font-size:13px;">Could not load pictures.</div>';
+  }
+}
+
+async function refreshFeaturedUrls() {
+  try {
+    const res = await fetch('/api/featured?urls=1');
+    const data = await res.json();
+    featuredUrls = data.urls || [];
+  } catch (e) { featuredUrls = []; }
+}
+
+// Add / remove a product from the homepage "Featured" slideshow
+async function toggleFeatured(encodedUrl, checkbox) {
+  const url = decodeURIComponent(encodedUrl);
+  const featured = checkbox.checked;
+  checkbox.disabled = true;
+  try {
+    const res = await fetch('/api/featured', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ passcode: savedPasscode, url, featured }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+    featuredUrls = data.urls || [];
+    if (typeof showNotify === 'function') showNotify(featured ? '⭐ Added to homepage featured items' : 'Removed from homepage featured items');
+  } catch (err) {
+    checkbox.checked = !featured;
+    alert('Could not update featured: ' + err.message);
+  } finally {
+    checkbox.disabled = false;
   }
 }
 
