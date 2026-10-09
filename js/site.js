@@ -256,6 +256,23 @@ async function renderFeatured() {
         </div>`;
     }).join('');
     section.style.display = 'block';
+
+    const step = () => {
+      const card = grid.querySelector('.featured-card');
+      return card ? card.getBoundingClientRect().width + 20 : 300;
+    };
+    const prev = document.getElementById('featuredPrev');
+    const next = document.getElementById('featuredNext');
+    const updateArrows = () => {
+      const max = grid.scrollWidth - grid.clientWidth - 2;
+      prev.style.display = grid.scrollLeft > 2 ? 'flex' : 'none';
+      next.style.display = grid.scrollLeft < max ? 'flex' : 'none';
+    };
+    prev.onclick = () => grid.scrollBy({ left: -step(), behavior: 'smooth' });
+    next.onclick = () => grid.scrollBy({ left: step(), behavior: 'smooth' });
+    grid.addEventListener('scroll', updateArrows, { passive: true });
+    window.addEventListener('resize', updateArrows);
+    updateArrows();
   } catch (err) {
     console.error('Error loading featured products:', err);
   }
