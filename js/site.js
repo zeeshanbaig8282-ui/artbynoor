@@ -219,10 +219,39 @@ async function renderFeatured() {
       prev.style.display = grid.scrollLeft > 2 ? 'flex' : 'none';
       next.style.display = grid.scrollLeft < max ? 'flex' : 'none';
     };
-    prev.onclick = () => grid.scrollBy({ left: -step(), behavior: 'smooth' });
-    next.onclick = () => grid.scrollBy({ left: step(), behavior: 'smooth' });
+    // Slow, eased scroll so products glide across instead of jumping
+    let anim = null;
+    const glideTo = (target, duration = 1400) => {
+      if (anim) cancelAnimationFrame(anim);
+      const from = grid.scrollLeft;
+      const dist = target - from;
+      if (Math.abs(dist) < 1) return;
+      const t0 = performance.now();
+      const tick = (now) => {
+        const t = Math.min(1, (now - t0) / duration);
+        const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // easeInOut
+        grid.scrollLeft = from + dist * e;
+        anim = t < 1 ? requestAnimationFrame(tick) : null;
+      };
+      anim = requestAnimationFrame(tick);
+    };
+
+    // Auto-advance one product at a time, looping back to the start
+    let autoTimer = null;
+    const maxScroll = () => grid.scrollWidth - grid.clientWidth;
+    const advance = () => {
+      if (document.hidden || maxScroll() < 4) return;
+      const atEnd = grid.scrollLeft >= maxScroll() - 4;
+      glideTo(atEnd ? 0 : Math.min(grid.scrollLeft + step(), maxScroll()), atEnd ? 1800 : 1400);
+    };
+    const startAuto = () => { stopAuto(); autoTimer = setInterval(advance, 3500); };
+    const stopAuto = () => { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } };
+
+    prev.onclick = () => { glideTo(Math.max(0, grid.scrollLeft - step()), 700); startAuto(); };
+    next.onclick = () => { glideTo(Math.min(maxScroll(), grid.scrollLeft + step()), 700); startAuto(); };
     grid.addEventListener('scroll', updateArrows, { passive: true });
     window.addEventListener('resize', updateArrows);
+    startAuto();
     updateArrows();
   } catch (err) {
     console.error('Error loading featured products:', err);
