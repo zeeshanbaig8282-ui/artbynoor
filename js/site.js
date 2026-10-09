@@ -184,40 +184,24 @@ async function renderSlideshow() {
   if (!container) return;
 
   try {
-    // Featured products picked in the dashboard come first.
-    // If none are picked yet, fall back to the old "Homepage Slideshow" pictures.
-    let images = [];
-    try {
-      const fres = await fetch('/api/featured');
-      const fdata = await fres.json();
-      images = fdata.images || [];
-    } catch (e) { /* fall through to fallback */ }
+    const res = await fetch('/api/images?category=slideshow');
+    const data = await res.json();
+    const images = data.images || [];
 
     if (images.length === 0) {
-      const res = await fetch('/api/images?category=slideshow');
-      const data = await res.json();
-      images = data.images || [];
-    }
-
-    if (images.length === 0) {
-      container.innerHTML = `<div class="slideshow-empty">No featured items yet ✨</div>`;
+      container.innerHTML = `<div class="slideshow-empty">No slideshow pictures yet ✨</div>`;
       return;
     }
 
-    container.innerHTML = images.map((img, i) => {
-      const priceLabel = img.price ? `Rs ${img.price}` : '';
-      const order = img.category
-        ? `<a class="slide-order" target="_blank" rel="noopener" href="https://wa.me/923218516727?text=${encodeURIComponent("Hi! I'd like to order: " + img.title + (img.price ? ' — Rs ' + img.price : ''))}">Order Now</a>`
-        : '';
-      return `
+    container.innerHTML = images.map((img, i) => `
       <div class="slide${i === 0 ? ' active' : ''}">
         <img src="${img.url}" alt="${escapeHtml(img.title)}">
-        ${img.title ? `<div class="slide-caption"><span class="slide-featured-tag">Featured</span><strong>${escapeHtml(img.title)}</strong>${priceLabel ? `<em>${escapeHtml(priceLabel)}</em>` : ''}${order}</div>` : ''}
-      </div>`;
-    }).join('');
+        ${img.title ? `<div class="slide-caption">${escapeHtml(img.title)}</div>` : ''}
+      </div>
+    `).join('');
 
+    // Start auto-rotation if there are multiple images
     if (images.length > 1) {
-      slideIndex = 0;
       startSlideshow(images.length);
     }
   } catch (err) {
@@ -236,6 +220,45 @@ function startSlideshow(total) {
     slideIndex = (slideIndex + 1) % total;
     slides[slideIndex].classList.add('active');
   }, 4000); // Transitions every 4 seconds
+}
+
+/* ══════════════════════════════════
+   FEATURED PRODUCTS (separate section on homepage)
+══════════════════════════════════ */
+const FEATURED_CAT_LABELS = {
+  crochet: 'Crochet', painting: 'Painting', crafts: 'Crafts',
+  mehndi: 'Mehndi', jewelry: 'Handmade Jewelery', charms: 'Charms'
+};
+
+async function renderFeatured() {
+  const section = document.getElementById('featuredSection');
+  const grid = document.getElementById('featuredGrid');
+  if (!section || !grid) return;
+
+  try {
+    const res = await fetch('/api/featured');
+    const data = await res.json();
+    const items = (data && data.images) || [];
+    if (items.length === 0) return; // section stays hidden until something is featured
+
+    grid.innerHTML = items.map((img) => {
+      const msg = "Hi! I'd like to order: " + img.title + (img.price ? ' — Rs ' + img.price : '');
+      return `
+        <div class="featured-card">
+          <a class="featured-card-img" href="gallery-${img.category}.html">
+            <img src="${img.url}" alt="${escapeHtml(img.title)}" loading="lazy">
+          </a>
+          <div class="featured-card-title">${escapeHtml(img.title)}</div>
+          <div class="featured-card-cat">${escapeHtml(FEATURED_CAT_LABELS[img.category] || img.category)}</div>
+          <div class="featured-card-price">${img.price ? 'Rs ' + escapeHtml(img.price) : ''}</div>
+          <a class="featured-card-order" target="_blank" rel="noopener"
+             href="https://wa.me/923218516727?text=${encodeURIComponent(msg)}">Order Now</a>
+        </div>`;
+    }).join('');
+    section.style.display = 'block';
+  } catch (err) {
+    console.error('Error loading featured products:', err);
+  }
 }
 
 /* ══════════════════════════════════
@@ -368,6 +391,7 @@ async function initCategoryThumbnails() {
 // Automatically initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
   renderSlideshow();
+  renderFeatured();
   renderReviews();
   initCategoryThumbnails();
   initSwipeNavigation();
